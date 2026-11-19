@@ -52,6 +52,10 @@ audio{width:100%;margin-top:8px}
 .err{color:#c0204f;font-size:14px;min-height:20px}
 .cnt{text-align:center;padding:10px 14px;margin-top:4px}
 .cnt b{font-size:18px}
+.pic{width:100%;border-radius:18px;border:2px solid var(--line);margin-top:8px;display:block}
+.cd{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:4px 0}
+.mini{padding:4px 10px;font-size:14px}
+input[type=date]{font:inherit;color:var(--ink);background:#fff8fb;border:2px solid var(--line);border-radius:16px;padding:10px;direction:ltr}
 </style>
 </head>
 <body>
@@ -134,16 +138,72 @@ async function render(){
 
 async function signed(path){const {data}=await sb.storage.from(BUCKET).createSignedUrl(path,3600);return data?data.signedUrl:''}
 function audioEl(path){const a=h('audio',{controls:''});signed(path).then(u=>a.src=u);return a}
+const fmtD=x=>new Date(x).toLocaleDateString('ar-MA',{day:'numeric',month:'long',year:'numeric'});
+async function shrink(file){
+  try{
+    const bmp=await createImageBitmap(file);
+    const k=Math.min(1,1600/Math.max(bmp.width,bmp.height));
+    const c=document.createElement('canvas');c.width=Math.round(bmp.width*k);c.height=Math.round(bmp.height*k);
+    c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);
+    const b=await new Promise(r=>c.toBlob(r,'image/jpeg',0.82));
+    return b||file;
+  }catch(e){return file}
+}
+async function cdCard(){
+  const {data,error}=await sb.from('countdowns').select('*').eq('space_id',SPACE).order('target_date');
+  if(error)return null;
+  const t0=new Date();t0.setHours(0,0,0,0);
+  const box=h('div',{class:'card'},h('b',{class:'t'},'⏳ كنتسناو'));
+  (data||[]).forEach(r=>{
+    const n=Math.round((new Date(r.target_date+'T00:00:00')-t0)/864e5);
+    if(n<0)return;
+    const row=h('div',{class:'cd'},h('span',{},(n===0?'🎉 اليوم: ':'بقاو '+n+' يوم على: ')+r.title));
+    if(r.created_by===me.id)row.append(h('button',{class:'ghost mini',onclick:async()=>{if(confirm('تمسح هاد التاريخ؟')){await sb.from('countdowns').delete().eq('id',r.id);render()}}},'🗑'));
+    box.append(row);
+  });
+  const ti=h('input',{type:'text',placeholder:'شنو كنتسناو؟ (مثلا: نلاقاوك)',style:'margin-top:8px'}),di=h('input',{type:'date'});
+  const er=h('div',{class:'err'});
+  box.append(ti,h('div',{class:'row'},di,h('button',{class:'ghost',onclick:async()=>{
+    if(!ti.value.trim()||!di.value){er.textContent='كتب العنوان وختار التاريخ';return}
+    const r=await sb.from('countdowns').insert({space_id:SPACE,title:ti.value.trim(),target_date:di.value,created_by:me.id});
+    if(r.error)er.textContent='ما تحفظش: '+r.error.message;else render();
+  }},'زيد ⏳')),er);
+  return box;
+}
+async function lettersBox(){
+  const {data,error}=await sb.from('secret_letters').select('*').eq('space_id',SPACE).order('unlock_at',{ascending:false});
+  if(error)return null;
+  const box=h('div',{},h('h2',{},'💌 رسائل سرية 🔒'),h('p',{class:'sub'},'كتب رسالة وحدد النهار اللي تتفتح فيه للطرف الآخر'));
+  const now=Date.now();
+  (data||[]).forEach(r=>{
+    const mineL=r.created_by===me.id,open=new Date(r.unlock_at)<=now;
+    const t=mineL?(open?'من عندي · تفتحات 🔓':'من عندي · 🔒 تتفتح '+fmtD(r.unlock_at)):'ليك 💌 · تفتحات '+fmtD(r.unlock_at);
+    const c=h('div',{class:'card'+(open?' sun':'')},h('b',{class:'t'},t),h('div',{style:'white-space:pre-wrap'},r.content));
+    if(mineL)c.append(h('div',{class:'row'},h('button',{class:'ghost mini',onclick:async()=>{if(confirm('تمسح هاد الرسالة؟')){await sb.from('secret_letters').delete().eq('id',r.id);render()}}},'🗑')));
+    box.append(c);
+  });
+  const ta=h('textarea',{placeholder:'كتب الرسالة السرية…',style:'min-height:80px'}),di=h('input',{type:'date'}),er=h('div',{class:'err'});
+  const tm=new Date();tm.setDate(tm.getDate()+1);di.min=iso(tm);
+  box.append(h('div',{class:'card sun'},ta,h('div',{class:'row'},h('span',{class:'st'},'تتفتح نهار:'),di),h('div',{class:'row'},h('button',{onclick:async()=>{
+    if(!ta.value.trim()||!di.value){er.textContent='كتب الرسالة وختار نهار الفتح';return}
+    const r=await sb.from('secret_letters').insert({space_id:SPACE,created_by:me.id,content:ta.value.trim(),unlock_at:new Date(di.value+'T00:00:00').toISOString()});
+    if(r.error)er.textContent='ما تحفظاتش: '+r.error.message;else render();
+  }},'خبّيها 🔒')),er));
+  return box;
+}
 
 async function dayPage(n,back){
   const day=iso(dayDate(n)),box=h('div');
   const {data,error}=await sb.from('day_entries').select('*').eq('space_id',SPACE).eq('day',day);
   if(error)throw error;
   const rows=data||[];
-  const mine=Object.assign({content:'',audio_path:null,starred:false},rows.find(r=>r.author_id===me.id)||{});
+  const mine=Object.assign({content:'',audio_path:null,photo_path:null,starred:false},rows.find(r=>r.author_id===me.id)||{});
   const other=rows.find(r=>r.author_id!==me.id);
+  const {data:spd}=await sb.from('special_days').select('*').eq('space_id',SPACE).eq('day',day);
+  let special=(spd&&spd[0])||null;
   if(back)box.append(h('button',{class:'ghost',onclick:()=>go('days')},'↩ رجع للأيام'));
   box.append(h('h1',{},'النهار '+n+' 🌷'),h('p',{class:'sub'},fmt(dayDate(n))+(back?'':' · اليوم')));
+  if(!back){const cc=await cdCard();if(cc)box.append(cc)}
   if(back){
     const {data:cs}=await sb.from('chat_snippets').select('content').eq('space_id',SPACE).eq('day',day).order('line_no');
     if(cs&&cs.length)box.append(h('div',{class:'card sun'},h('b',{class:'t'},'📜 من الشات ديالنا'),...cs.map(r=>h('div',{style:'white-space:pre-wrap;margin:4px 0'},r.content))));
@@ -152,15 +212,23 @@ async function dayPage(n,back){
   const st=h('span',{class:'st'},'');
   async function save(){
     st.textContent='كنحفظ…';
-    const {error}=await sb.from('day_entries').upsert({space_id:SPACE,day,author_id:me.id,content:mine.content,audio_path:mine.audio_path,starred:mine.starred,updated_at:new Date().toISOString()},{onConflict:'space_id,day,author_id'});
+    const {error}=await sb.from('day_entries').upsert({space_id:SPACE,day,author_id:me.id,content:mine.content,audio_path:mine.audio_path,photo_path:mine.photo_path,starred:mine.starred,updated_at:new Date().toISOString()},{onConflict:'space_id,day,author_id'});
     st.textContent=error?'ما تحفظاتش: '+error.message:'تحفظات ✓';
   }
   const ta=h('textarea',{placeholder:'كتب هنا…'});ta.value=mine.content||'';
   let tm;ta.oninput=()=>{mine.content=ta.value;st.textContent='…';clearTimeout(tm);tm=setTimeout(save,800)};
   const starB=h('button',{class:'ghost'},mine.starred?'⭐ محفوظ':'☆ زوين');
   starB.onclick=async()=>{mine.starred=!mine.starred;starB.textContent=mine.starred?'⭐ محفوظ':'☆ زوين';await save()};
-  const player=h('div');if(mine.audio_path)player.append(audioEl(mine.audio_path));
   const msg=h('div',{class:'err'});
+  const player=h('div');
+  const setAudio=p=>{player.replaceChildren();if(!p)return;player.append(audioEl(p),h('button',{class:'ghost',style:'margin-top:6px',onclick:delAudio},'🗑 مسح الأوديو'))};
+  async function delAudio(){
+    if(!confirm('تمسح هاد الأوديو؟'))return;
+    const old=mine.audio_path;mine.audio_path=null;setAudio(null);await save();
+    const r=await sb.storage.from(BUCKET).remove([old]);
+    if(r.error||!(r.data&&r.data.length))msg.textContent='تحيد من الصفحة، ولكن الملف بقا فالتخزين.';
+  }
+  setAudio(mine.audio_path);
   const rb=h('button',{},'سجّل أوديو 🎙️');let rec,chunks;
   rb.onclick=async()=>{
     msg.textContent='';
@@ -175,25 +243,67 @@ async function dayPage(n,back){
         st.textContent='كنرفع الأوديو…';
         const {error}=await sb.storage.from(BUCKET).upload(path,new Blob(chunks,{type}),{contentType:type});
         if(error){st.textContent='';msg.textContent='ما تحمّلش الأوديو: '+error.message;return}
-        mine.audio_path=path;player.replaceChildren(audioEl(path));await save();
+        const old=mine.audio_path;mine.audio_path=path;setAudio(path);await save();
+        if(old)sb.storage.from(BUCKET).remove([old]);
       };
       rec.start();rb.textContent='⏹ وقف';
     }catch(e){msg.textContent='خاصك تسمح للميكرو 🎙️'}
   };
+  const pBox=h('div'),pm=h('div',{class:'err'});
+  const setPhoto=p=>{pBox.replaceChildren();if(!p)return;const img=h('img',{class:'pic'});signed(p).then(u=>img.src=u);pBox.append(img,h('button',{class:'ghost',style:'margin-top:6px',onclick:delPhoto},'🗑 مسح الصورة'))};
+  async function delPhoto(){
+    if(!confirm('تمسح هاد الصورة؟'))return;
+    const old=mine.photo_path;mine.photo_path=null;setPhoto(null);await save();
+    const r=await sb.storage.from(BUCKET).remove([old]);
+    if(r.error||!(r.data&&r.data.length))pm.textContent='تحيدات من الصفحة، ولكن الملف بقا فالتخزين.';
+  }
+  setPhoto(mine.photo_path);
+  const pf=h('input',{type:'file',accept:'image/*',style:'display:none'});
+  pf.onchange=async()=>{
+    const file=pf.files[0];if(!file)return;pm.textContent='كنرفع الصورة…';
+    const small=await shrink(file),isJ=small!==file;
+    const path=SPACE+'/photos/'+me.id+'/'+day+'-'+Date.now()+'.'+(isJ?'jpg':((file.name.split('.').pop()||'jpg').toLowerCase()));
+    const u=await sb.storage.from(BUCKET).upload(path,small,{contentType:isJ?'image/jpeg':file.type});
+    if(u.error){pm.textContent='ما تحمّلاتش: '+u.error.message;return}
+    const old=mine.photo_path;mine.photo_path=path;setPhoto(path);await save();pm.textContent='';
+    if(old)sb.storage.from(BUCKET).remove([old]);
+    pf.value='';
+  };
+  const spB=h('button',{class:'ghost'});
+  const paintSp=()=>{spB.textContent=special?'💎 ذكرى خاصة'+(special.title?': '+special.title:''):'◇ علّم هاد النهار ذكرى خاصة'};
+  paintSp();
+  spB.onclick=async()=>{
+    msg.textContent='';
+    if(special){
+      if(special.created_by!==me.id){msg.textContent='الطرف الآخر هو لي علّمها.';return}
+      if(!confirm('تحيد العلامة؟'))return;
+      const r=await sb.from('special_days').delete().eq('id',special.id);
+      if(r.error){msg.textContent=r.error.message;return}
+      special=null;paintSp();return;
+    }
+    const t=prompt('شنو وقع فهاد النهار؟ (عنوان قصير)');if(t===null)return;
+    const r=await sb.from('special_days').insert({space_id:SPACE,day,title:t.trim(),created_by:me.id}).select().single();
+    if(r.error){msg.textContent='ما تحفظاتش: '+r.error.message;return}
+    special=r.data;paintSp();
+  };
   box.append(h('div',{class:'card'},h('b',{class:'t'},'أنا 💗'),ta,player,h('div',{class:'row'},rb,starB,st),msg));
+  box.append(h('div',{class:'card'},h('b',{class:'t'},'📸 صورة النهار'),pBox,h('div',{class:'row'},h('button',{onclick:()=>pf.click()},'صورة النهار 📷'),pf),pm,h('div',{class:'row'},spB)));
 
   if(other){
     const c=h('div',{class:'card sun'},h('b',{class:'t'},'هو/هي 💌'+(other.starred?' ⭐':'')),h('div',{style:'white-space:pre-wrap'},other.content||'…'));
     if(other.audio_path)c.append(audioEl(other.audio_path));
+    if(other.photo_path){const im=h('img',{class:'pic'});signed(other.photo_path).then(u=>im.src=u);c.append(im)}
     box.append(c);
   }else box.append(h('div',{class:'card sun'},'📜 الطرف الآخر مزال ما كتب فهاد النهار.'));
   return box;
 }
 
 async function daysPage(){
-  const {data,error}=await sb.from('day_entries').select('day,content,audio_path').eq('space_id',SPACE);
+  const {data,error}=await sb.from('day_entries').select('day,content,audio_path,photo_path').eq('space_id',SPACE);
   if(error)throw error;
-  const has=new Set((data||[]).filter(r=>(r.content&&r.content.trim())||r.audio_path).map(r=>r.day));
+  const has=new Set((data||[]).filter(r=>(r.content&&r.content.trim())||r.audio_path||r.photo_path).map(r=>r.day));
+  const {data:sdd}=await sb.from('special_days').select('day').eq('space_id',SPACE);
+  const spec=new Set((sdd||[]).map(r=>r.day));
   const {data:cd}=await sb.from('chat_snippets').select('day');
   (cd||[]).forEach(r=>has.add(r.day));
   const box=h('div',{},h('h1',{},'الأيام 📅'),h('p',{class:'sub'},'كل نهار دارو بجوج 💕'));
@@ -204,7 +314,7 @@ async function daysPage(){
     box.append(h('div',{class:'card item'+(n===t?' today':''),onclick:()=>go('days',n)},
       h('div',{class:'dot'},String(n)),
       h('div',{},h('b',{},'النهار '+n),h('div',{class:'d'},fmt(d))),
-      h('div',{style:'margin-inline-start:auto'},n===t?'اليوم':(full?'📜':'خاوي'))));
+      h('div',{style:'margin-inline-start:auto'},(spec.has(iso(d))?'💎 ':'')+(n===t?'اليوم':(full?'📜':'خاوي')))));
   }
   box.append(h('div',{class:'row',style:'justify-content:center;margin-top:18px'},h('button',{class:'ghost',onclick:importFile},'📥 استيراد ملف الشات')));
   return box;
@@ -221,6 +331,16 @@ async function zwinPage(){
     if(r.audio_path)c.append(audioEl(r.audio_path));
     box.append(c);
   });
+  const {data:sd}=await sb.from('special_days').select('*').eq('space_id',SPACE).order('day',{ascending:false});
+  if(sd&&sd.length){
+    box.append(h('h2',{style:'margin-top:20px'},'💎 ذكريات خاصة'));
+    sd.forEach(r=>{
+      const n=Math.round((new Date(r.day+'T12:00:00')-START)/864e5)+1;
+      box.append(h('div',{class:'card item',onclick:()=>go('days',n)},h('div',{class:'dot'},String(n)),h('div',{},h('b',{},r.title||'ذكرى خاصة'),h('div',{class:'d'},fmt(new Date(r.day+'T12:00:00'))))));
+    });
+  }
+  const lb=await lettersBox();
+  if(lb){lb.style.marginTop='20px';box.append(lb)}
   return box;
 }
 
@@ -234,9 +354,10 @@ async function picsPage(){
     let i=0;
     for(const file of f.files){
       msg.textContent='كنرفع '+(++i)+'/'+f.files.length+'…';
-      const ext=(file.name.split('.').pop()||'jpg').toLowerCase();
+      const small=await shrink(file),isJ=small!==file;
+      const ext=isJ?'jpg':(file.name.split('.').pop()||'jpg').toLowerCase();
       const path=SPACE+'/photos/'+me.id+'/'+Date.now()+'-'+i+'.'+ext;
-      const u=await sb.storage.from(BUCKET).upload(path,file,{contentType:file.type});
+      const u=await sb.storage.from(BUCKET).upload(path,small,{contentType:isJ?'image/jpeg':file.type});
       if(u.error){msg.textContent='ما تحمّلاتش: '+u.error.message;return}
       const r=await sb.from('photos').insert({space_id:SPACE,path});
       if(r.error){msg.textContent='ما تسجّلاتش: '+r.error.message;return}
