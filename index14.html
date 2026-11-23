@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="app-ver" content="3.6-c14">
+<meta name="theme-color" content="#ffe3ee">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>كتابنا ♡</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+:root{--bg:#fff0f6;--card:#fff;--line:#ffc2d9;--ink:#5a2a41;--soft:#a5607f;--pink:#ff5c9a;--sun:#fff4c2}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{background:linear-gradient(var(--top,#ffe3ee),var(--bg) 220px);color:var(--ink);font-family:"Segoe UI",Tahoma,system-ui,sans-serif;font-size:17px;line-height:1.6;padding-bottom:110px}
+.scr{display:none;max-width:560px;margin:0 auto;padding:18px 16px}
+.scr.on{display:block}
+.deco{text-align:center;font-size:26px;letter-spacing:8px;margin:4px 0}
+h1{font-size:30px;margin:6px 0 2px;text-align:center}
+h2{font-size:22px;margin:4px 0 10px}
+.sub{text-align:center;color:var(--soft);margin:0 0 14px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:24px;padding:14px 16px;margin:12px 0}
+.card.sun{background:var(--sun);border-color:#f5d86a}
+.card b.t{display:block;margin-bottom:6px}
+textarea,input[type=text],input[type=email],input[type=password]{width:100%;font:inherit;color:var(--ink);background:#fff8fb;border:2px solid var(--line);border-radius:16px;padding:12px;direction:rtl}
+textarea{min-height:130px;resize:vertical}
+button{font:inherit;cursor:pointer;border:0;border-radius:999px;padding:10px 18px;background:var(--pink);color:#fff;font-weight:600}
+button.ghost{background:#ffe3ee;color:var(--ink)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.st{color:var(--soft);font-size:14px}
+.top{display:flex;justify-content:space-between;align-items:center;padding-top:env(safe-area-inset-top,0)}
+.top button{background:#fff;border:2px solid var(--line);color:var(--ink);font-size:22px;padding:6px 12px}
+.item{display:flex;gap:12px;align-items:center;cursor:pointer}
+.dot{flex:none;width:46px;height:46px;border-radius:50%;background:#ffe3ee;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:700}
+.item.today .dot{background:var(--pink);color:#fff;border-color:var(--pink)}
+.item .d{color:var(--soft);font-size:14px}
+.nav{position:fixed;inset:auto 12px calc(12px + env(safe-area-inset-bottom,0)) 12px;max-width:540px;margin:0 auto;background:#fff;border:2px solid var(--line);border-radius:999px;display:flex;justify-content:space-around;padding:6px;box-shadow:0 6px 18px #ff5c9a33;z-index:5}
+.nav button{background:none;color:var(--soft);border-radius:999px;padding:6px 7px;font-size:11.5px;line-height:1.3;font-weight:500}
+.nav button span{display:block;font-size:22px}
+.nav button.on{background:#ffe3ee;color:var(--pink);font-weight:700}
+.nav button{position:relative}
+.nav .rd{position:absolute;top:2px;inset-inline-end:10px;width:12px;height:12px;border-radius:50%;background:#ff2d55;border:2px solid #fff}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid div{position:relative}
+.grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:18px;border:2px solid var(--line)}
+.grid .x{position:absolute;top:6px;left:6px;padding:2px 8px;background:#fffc;color:var(--ink)}
+audio{width:100%;margin-top:8px}
+.ov{position:fixed;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column}
+.ov.on{display:flex}
+.ov .bar{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;padding-top:calc(14px + env(safe-area-inset-top,0))}
+#ml{flex:1;overflow:auto;padding:0 14px;display:flex;flex-direction:column;gap:8px}
+.b{max-width:80%;padding:8px 14px;border-radius:20px;background:#fff;border:2px solid var(--line);white-space:pre-wrap}
+.b.me{align-self:flex-start;background:#ffd3e4}
+.b.ot{align-self:flex-end}
+#mf{display:flex;gap:8px;padding:10px 12px calc(12px + env(safe-area-inset-bottom,0))}
+.err{color:#c0204f;font-size:14px;min-height:20px}
+.cnt{text-align:center;padding:10px 14px;margin-top:4px}
+.cnt b{font-size:18px}
+.pic{width:100%;border-radius:18px;border:2px solid var(--line);margin-top:8px;display:block}
+.cd{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:4px 0}
+.mini{padding:4px 10px;font-size:14px}
+input[type=date]{font:inherit;color:var(--ink);background:#fff8fb;border:2px solid var(--line);border-radius:16px;padding:10px;direction:ltr}
+
+.pinov{position:fixed;inset:0;z-index:300;background:radial-gradient(circle at 50% 25%,#ffe3ee,#ffc2d9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,2vh,22px);padding:10px;overflow:auto;text-align:center;transition:opacity .65s ease}
+.pinov[hidden]{display:none}
+.pinov.out{opacity:0;pointer-events:none}
+.stage{perspective:1100px;flex:none}
+.book{--bh:min(38vh,340px);position:relative;height:var(--bh);aspect-ratio:3/4;transform-style:preserve-3d;transition:transform 1.1s ease;filter:drop-shadow(0 12px 20px #ff5c9a55)}
+.pinov.open .book{transform:translateX(-14%)}
+.book .pg{position:absolute;inset:0;background:#fffafc;border:2px solid var(--line);border-radius:6px 18px 18px 6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px}
+.book .pg .big{font-size:calc(var(--bh)*.115);font-weight:800;color:var(--pink);line-height:1.2}
+.book .pg .dt{color:var(--soft);font-size:calc(var(--bh)*.052)}
+.book .pg .ln{font-size:calc(var(--bh)*.048);margin-top:6px}
+.book .pg .fl{font-size:calc(var(--bh)*.08)}
+.lid{position:absolute;inset:0;transform-origin:right center;transform-style:preserve-3d;transition:transform 1.1s cubic-bezier(.5,0,.2,1)}
+.pinov.open .lid{transform:rotateY(160deg)}
+.face{position:absolute;inset:0;border-radius:6px 18px 18px 6px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--bh)*.02)}
+.fr{background:linear-gradient(145deg,#ff7fb0,#ff5c9a);border:3px solid #ff3d86;color:#fff;box-shadow:inset -10px 0 0 #e8508c}
+.fr .f{font-size:calc(var(--bh)*.07);letter-spacing:5px}
+.fr .t{font-size:calc(var(--bh)*.105);font-weight:800}
+.fr .h{font-size:calc(var(--bh)*.045);opacity:.9}
+.bk{background:#ffd9e8;border:3px solid #ff9cc2;transform:rotateY(180deg);color:var(--soft);font-size:calc(var(--bh)*.14)}
+.hl{width:calc(var(--bh)*.46);height:auto;overflow:visible;margin-top:calc(var(--bh)*.01)}
+.hl .shackle{transition:transform .55s cubic-bezier(.3,1.4,.5,1);transform-origin:32px 52px}
+.pd{fill:none;stroke:#7a4a0f;stroke-width:1.8;transition:fill .08s}
+.pd.f{fill:#7a4a0f}
+.pinov.unl .shackle{transform:translate(-2px,-8px) rotate(-30deg)}
+.pinov.unl .hl{animation:pop .5s}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.14)}100%{transform:scale(1)}}
+.hl.shake{animation:shk .35s}
+@keyframes shk{20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+.ctrl{display:flex;flex-direction:column;align-items:center;gap:4px;transition:opacity .35s}
+.pinov.unl .ctrl{opacity:0;pointer-events:none}
+.ctrl h2{margin:0;font-size:clamp(18px,3.2vh,24px)}
+.ctrl .sub{margin:0;font-size:clamp(13px,2.2vh,16px)}
+.ctrl .err{color:#c2185b;min-height:20px;font-size:14px}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(5px,1.3vh,12px);width:min(290px,78vw);direction:ltr}
+.pad button{height:clamp(40px,7.4vh,62px);border-radius:999px;background:#fff;border:2px solid var(--line);color:var(--ink);font-size:clamp(20px,3.4vh,26px);font-weight:700;padding:0}
+.pad button:active{background:#ffe3ee}
+.pad button:disabled{opacity:.4}
+.pad .nb{visibility:hidden}
+.ctrl .lnk{background:none;color:var(--soft);font-size:14px;text-decoration:underline;font-weight:500;padding:2px 8px}
+@media (min-aspect-ratio:5/4){.pinov{flex-direction:row;gap:6vw}.book{--bh:min(76vh,430px)}.pad button{height:clamp(40px,10vh,62px)}}
+@media (prefers-reduced-motion:reduce){.book,.lid,.hl .shackle,.pinov{transition-duration:.01s}.pinov.unl .hl{animation:none}}
+/* ===== غلاف 3D v2 ===== */
+.pinov{background:radial-gradient(ellipse at 50% 28%,#2b4170 0,#122244 55%,#070f24 100%)}
+.stage{animation:fl 5s ease-in-out infinite}
+@keyframes fl{50%{transform:translateY(-8px)}}
+.book{filter:drop-shadow(0 22px 22px #000a)}
+.book .pg{background:linear-gradient(90deg,#efe2c8,#fffaf0 14%,#fff7e8);border:0;color:#5a3f1a;box-shadow:-1px 1px 0 #e6d8bc,-2px 2px 0 #fffaf0,-3px 3px 0 #e6d8bc,-4px 4px 0 #fffaf0,-5px 5px 0 #e6d8bc,-6px 6px 0 #fffaf0,-7px 7px 0 #e6d8bc,-8px 8px 0 #fffaf0,-9px 9px 0 #e6d8bc,-10px 10px 0 #1a2f5a,-11px 11px 0 #14264b,-12px 12px 0 #0f1e3d,-13px 13px 0 #0a1630}
+.book .pg .big{color:#a8691a}
+.book .pg .dt,.book .pg .ln{color:#8a6a3a}
+.fr{background:radial-gradient(circle at 30% 18%,#34559a,#17294f 55%,#0b1631);border:0;color:#f6d98a;box-shadow:inset -14px 0 16px #0009,inset 3px 0 5px #ffffff30,inset 0 2px 3px #ffffff30}
+.fr::before{content:"";position:absolute;inset:12px 22px 12px 12px;border:2px solid #d9a93a;border-radius:3px 10px 10px 3px;opacity:.8;pointer-events:none}
+.fr .t{background:linear-gradient(180deg,#fff0b8,#e0a02b 60%,#9a6414);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 2px #000a)}
+.fr .h{color:#d9b878}
+.bk{background:linear-gradient(90deg,#0f1e3d,#1b2f57);border:0;color:#d9a93a}
+.hl{filter:drop-shadow(0 5px 4px #000b)}
+.ctrl h2{color:#fbeacb}.ctrl .sub,.ctrl .lnk{color:#aebbd8}.ctrl .err{color:#ff9aa8}
+.pad button{background:linear-gradient(180deg,#3d5d9c,#223a6c);border:0;color:#fbeacb;box-shadow:0 5px 0 #0a1630,0 9px 14px #0008,inset 0 1px 0 #ffffff40;transition:transform .08s,box-shadow .08s}
+.pad button:active{background:linear-gradient(180deg,#34528c,#1b3160);transform:translateY(4px);box-shadow:0 1px 0 #0a1630,0 3px 6px #0008,inset 0 1px 0 #ffffff30}
+@media (min-aspect-ratio:5/4){.pinov{gap:clamp(40px,7vw,90px)}}
+@media (prefers-reduced-motion:reduce){.stage{animation:none}}
+.pd{stroke:#f6d98a}.pd.f{fill:#f6d98a}
+.hl{width:calc(var(--bh)*.52)}
+
+/* ===== v3: سينما الفتح ===== */
+.book{transform:rotateX(4deg) rotateY(-9deg)}
+.pinov.open .book{transform:translateX(-14%) rotateX(2deg) rotateY(-4deg)}
+.pinov.out{transition-duration:.9s}
+.stage{will-change:transform}
+.lt{position:absolute;inset:-18%;border-radius:40%;background:radial-gradient(circle,#fff1b8cc 0,#f6c75a66 35%,transparent 68%);opacity:0;transform:translateZ(-3px);transition:opacity 1.2s ease;pointer-events:none;filter:blur(6px)}
+.pinov.unl .lt{opacity:.35}
+.pinov.open .lt{opacity:1}
+.pinov.open .pg{transform-origin:right center;animation:brz 2.8s ease-in-out 1.2s infinite alternate}
+@keyframes brz{from{transform:rotateY(0)}to{transform:rotateY(-2.5deg) skewY(.4deg)}}
+.hl{transition:filter .6s}
+.pinov.rec .hl{filter:drop-shadow(0 5px 4px #000b) drop-shadow(0 0 8px #f6d98a99)}
+.pinov.unl .hl{animation:none;filter:drop-shadow(0 5px 4px #000b) drop-shadow(0 0 20px #ffd86a)}
+.hl .ht{transition:fill .6s,opacity .6s}
+.pinov.unl .hl .ht{fill:#fff2b5;opacity:1}
+.pinov.unl .shackle{transform:translate(0,-10px)}
+.pinov.open .shackle{transform:translate(-3px,-10px) rotate(-32deg)}
+.dots{display:flex;gap:12px;direction:ltr;margin:6px 0 2px}
+.dots i{width:14px;height:14px;border-radius:50%;border:1.5px solid #c9a24a88;background:#c9a24a22;transition:background .35s,box-shadow .35s,border-color .35s,transform .35s cubic-bezier(.3,1.6,.5,1)}
+.dots i.f{background:radial-gradient(circle at 35% 30%,#fffbe0,#f6d98a 45%,#d99a2b);border-color:#ffe9a8;box-shadow:0 0 10px 2px #f6d98acc,0 0 22px 4px #f6d98a66;transform:scale(1.18)}
+.pinov.rec .dots i.f{box-shadow:0 0 14px 4px #ffe08a,0 0 30px 8px #f6c75a88}
+.ctrl>*{transition:opacity .5s}
+.pinov.unl .ctrl{opacity:1}
+.pinov.rec .ctrl{pointer-events:none}
+.pinov.rec .ctrl>*:not(.dots){opacity:0}
+.pinov.zoom .ctrl{opacity:0}
+.pad button{transition:transform .38s cubic-bezier(.3,1.7,.5,1),box-shadow .38s,background .2s}
+.pad button:active{transition-duration:.05s}
+.pinov.zoom .stage{animation:zm 2.4s cubic-bezier(.4,0,.2,1) forwards}
+.pinov.zoom .book{filter:none}
+@keyframes zm{from{transform:translateY(0) scale(1)}to{transform:translateY(0) scale(2.5)}}
+.lid{transition:transform 1.5s cubic-bezier(.45,0,.25,1)}
+.pinov.open .book{transition:transform 1.5s cubic-bezier(.45,0,.25,1)}
+.ivory{position:absolute;inset:0;z-index:6;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%,#fffef6 0,#fbeec6 45%,#f0cf7e 100%)}
+.pinov.zoom .ivory{opacity:1;transition:opacity 1.4s ease .9s}
+.fx{position:absolute;inset:0;pointer-events:none;z-index:5;overflow:hidden}
+.fx .sp{position:absolute;border-radius:50%;background:radial-gradient(#fff6c8,#f2b93b);box-shadow:0 0 6px 2px #f6d98a}
+.fx .orb{position:absolute;width:26px;height:26px;border-radius:50%;background:radial-gradient(circle,#fff8d0,#f6c75a 45%,transparent 70%);box-shadow:0 0 24px 10px #f6d98a99}
+.snd{position:absolute;top:10px;left:10px;z-index:7;width:40px;height:40px;border-radius:50%;padding:0;font-size:18px;background:#ffffff1c;border:1px solid #f6d98a55;color:#fbeacb;box-shadow:none}
+.ctrl .err{color:#ffc0cb}
+@media (prefers-reduced-motion:reduce){.pinov.open .pg{animation:none}.pinov.zoom .stage{animation-duration:.01s}.pad button{transition-duration:.01s}}
+.cam [hidden],.camrow[hidden],#main [hidden]{display:none!important}
+.cam{position:relative;border-radius:22px;overflow:hidden;background:#1b1b24;aspect-ratio:3/4;width:min(100%,calc(50vh*.75));margin:10px auto;border:2px solid var(--line)}
+.cam video,.cam img{width:100%;height:100%;object-fit:cover;display:block}
+.cam video.mir{transform:scaleX(-1)}
+.camrow{display:flex;align-items:center;justify-content:center;gap:22px;margin:6px 0}
+.shut{width:74px;height:74px;border-radius:50%;border:5px solid #fff;background:var(--pink);box-shadow:0 0 0 3px var(--pink),0 6px 14px #ff5c9a55;padding:0;transition:transform .3s cubic-bezier(.3,1.7,.5,1)}
+.shut:active{transform:scale(.88)}
+.rnd{width:48px;height:48px;border-radius:50%;padding:0;font-size:22px}
+.ic{background:#fff;border:2px solid var(--line);border-radius:22px;overflow:hidden;margin:14px 0;position:relative}
+.ic img{width:100%;display:block}
+.ic .cp{padding:10px 14px 4px;font-weight:600;color:var(--ink);word-break:break-word}
+.ic .mt{padding:2px 14px 10px;color:var(--soft);font-size:13px}
+.ic .x{position:absolute;top:8px;left:8px}
+.top button{position:relative}
+.top .rd{top:4px;inset-inline-end:4px}
+.rx{display:flex;gap:8px;align-items:center;padding:6px 14px 4px;flex-wrap:wrap}
+.hb{background:#fff;border:2px solid var(--line);color:var(--ink);padding:4px 14px;font-size:16px}
+.hb.on{background:#ffe3ee;border-color:var(--pink)}
+.rc{padding:0 14px 4px;font-size:14px;color:var(--ink);word-break:break-word}
+.rin{display:flex;gap:6px;padding:4px 14px 12px;align-items:center}
+.rin input{flex:1;padding:8px 12px;border-radius:16px}
+.grid .hrt{position:absolute;bottom:6px;right:6px;padding:2px 10px;font-size:15px;background:#fffd}
+.moods{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.moods button{background:#fff;border:2px solid var(--line);font-size:24px;padding:4px 10px;border-radius:16px}
+.moods button.on{background:#ffe3ee;border-color:var(--pink)}
+.lb{position:fixed;inset:0;background:#000d;z-index:400;display:flex;align-items:center;justify-content:center}
+.lb img{max-width:96vw;max-height:92vh;border-radius:12px}
+details.card summary{cursor:pointer;font-weight:700}
+details.card ol{margin:8px 0;padding-inline-start:22px;font-size:15px}
+.ver{position:fixed;bottom:2px;left:6px;font-size:10px;opacity:.55;pointer-events:none;z-index:3}
+.upd{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:500;background:#ffd66b;color:#5a3a00;padding:10px 16px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 6px 18px #0004;cursor:pointer;max-width:92vw;text-align:center}
+.cm{display:flex;gap:6px;align-items:baseline;margin:4px 0;font-size:14px;line-height:1.6;text-align:right}.cm b{white-space:nowrap}.cmx{background:none;border:0;color:#b88;font-size:12px;padding:0 4px;margin-inline-start:auto;box-shadow:none;width:auto;min-width:0}.cmn{margin-inline-start:8px;opacity:.6}
+.abar{height:14px;border-radius:9px;background:#ffe3ee;overflow:hidden;margin:6px 0}.abar i{display:block;height:100%;border-radius:9px}
+.ag{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:4px;text-align:center;font-size:14px;margin-top:4px}
+.tg{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0}.tg input[type=checkbox]{width:22px;height:22px;accent-color:var(--pink)}.tg input[type=time]{font:inherit;color:var(--ink);background:#fff8fb;border:2px solid var(--line);border-radius:12px;padding:6px;direction:ltr}
+
+/* ===== v3.6-c5: وضع الكود الكاذب = تطبيق ملاحظات عادي ===== */
+body.dcy{background:#f2f2f0;color:#222;font-family:system-ui,"Segoe UI",Tahoma,sans-serif}
+body.dcy .top,body.dcy #cnt,body.dcy #nav,body.dcy #pushBox,body.dcy .ver{display:none!important}
+body.dcy #app{padding-top:calc(18px + env(safe-area-inset-top,0px))}
+.nt-bar{display:flex;justify-content:space-between;align-items:center;margin:6px 0 14px}
+.nt-h{margin:0;font-size:32px;text-align:start}
+.nt-add{background:#e9b949;color:#fff;width:42px;height:42px;padding:0;font-size:26px;line-height:1;border-radius:50%}
+.nt-lk{background:none;color:#b5841a;padding:6px 4px;font-size:17px;font-weight:600}
+.nt-c{background:#fff;border-radius:14px;padding:12px 14px;margin:8px 0;cursor:pointer;box-shadow:0 1px 2px #0001}
+.nt-c b{display:block;font-size:17px;color:#222}
+.nt-p{font-size:14px;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nt-e{text-align:center;color:#999;padding:40px 0}
+input.nt-t{background:transparent;border:0;border-radius:0;padding:8px 0;font-size:24px;font-weight:700;color:#222}
+textarea.nt-b{background:transparent;border:0;border-radius:0;padding:8px 0;min-height:60vh;font-size:17px;color:#222}
+
+/* ===== v3.6-c6: أغنية النهار 🎵 ===== */
+.nav button{padding:6px 4px;font-size:11px}
+.sg{background:#fff;border:2px solid var(--line);border-radius:22px;overflow:hidden;margin:12px 0}
+.sgm{position:relative}
+.sgt{position:relative;aspect-ratio:16/9;background:linear-gradient(135deg,#ffd3e4,#ffe9a8);background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center}
+.sgn{font-size:54px;opacity:.7}
+.sgp{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;padding:0;font-size:24px;line-height:1;background:#ff5c9acc;box-shadow:0 6px 16px #0004}
+.sgf{display:block;width:100%;aspect-ratio:16/9;border:0}
+.sgf.sp{aspect-ratio:auto}
+.sgi{padding:10px 14px 12px}
+.sgmsg{margin-top:6px;white-space:pre-wrap;word-break:break-word}
+.sgl{display:inline-block;font-size:13px;color:var(--soft)}
+.sg.sm .sgt{aspect-ratio:21/8}
+.sg.sm .sgp{width:46px;height:46px;font-size:18px}
+
+/* ===== v3.6-c7: تقريرنا + رسالة سرية مفاجأة ===== */
+#cnt{cursor:pointer}
+.rpn{font-size:20px;font-weight:700;color:var(--pink)}
+.lq{position:fixed;inset:0;z-index:250;background:#5a2a41bb;display:flex;align-items:center;justify-content:center;padding:20px}
+.lq .card{max-width:420px;width:100%;text-align:center;margin:0;max-height:88vh;overflow:auto}
+
+/* ===== v3.6-c10: دخلة حسب الوقت ===== */
+.pinov::before{position:absolute;top:calc(10px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);font-size:34px;pointer-events:none;z-index:6}
+.pinov.tm-am::before{content:"☀️"}.pinov.tm-nt::before{content:"🌙"}
+.pinov.tm-am{background:radial-gradient(ellipse at 50% 28%,#fff6dc 0,#ffe3b8 55%,#ffcaa0 100%)}
+.pinov.tm-pm{background:radial-gradient(ellipse at 50% 28%,#ffdbe8 0,#ffb9d2 55%,#e98fb3 100%)}
+.pinov.tm-nt{background:radial-gradient(1.5px 1.5px at 12% 18%,#fff,transparent),radial-gradient(2px 2px at 78% 12%,#fff,transparent),radial-gradient(1.5px 1.5px at 30% 70%,#fff9,transparent),radial-gradient(2px 2px at 88% 62%,#fff,transparent),radial-gradient(1.5px 1.5px at 55% 88%,#fff9,transparent),radial-gradient(ellipse at 50% 28%,#2b4170 0,#122244 55%,#070f24 100%)}
+.pinov.tm-am .ctrl h2,.pinov.tm-pm .ctrl h2{color:#5a2a41}
+.pinov.tm-am .ctrl .sub,.pinov.tm-am .ctrl .lnk,.pinov.tm-pm .ctrl .sub,.pinov.tm-pm .ctrl .lnk{color:#8a4a63}
+.pinov.tm-am .ctrl .err,.pinov.tm-pm .ctrl .err{color:#c2185b}
+.pinov.tm-am .snd,.pinov.tm-pm .snd{color:#5a2a41;border-color:#5a2a4155;background:#ffffff66}
+.book .pg .ln{text-align:center;line-height:1.5}
+
+/* ===== v3.6-c11: خلفية حسب الوقت + لعيبات خفيفة ===== */
+.sky{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+#sky{position:fixed;z-index:-1}
+body.dcy #sky{display:none}
+.sky span{position:absolute;line-height:1;will-change:transform,opacity}
+@keyframes skTw{0%,100%{opacity:.12;transform:scale(.7)}50%{opacity:.85;transform:scale(1.2)}}
+@keyframes skDr{from{transform:translateX(-30vw)}to{transform:translateX(130vw)}}
+@keyframes skFa{from{transform:translate(0,-10vh) rotate(0)}to{transform:translate(8vw,112vh) rotate(260deg)}}
+@keyframes skBo{50%{transform:translate(14px,-18px)}}
+.pinov .stage,.pinov .ctrl{position:relative;z-index:1}
+.pinov{-webkit-user-select:none;user-select:none}
+.pinov.tm-dw::before{content:"🌅"}.pinov.tm-sn::before{content:"🌇"}
+.pinov.tm-dw{background:radial-gradient(ellipse at 50% 28%,#fff1e0 0,#ffd9bf 55%,#ffb8a0 100%)}
+.pinov.tm-sn{background:radial-gradient(ellipse at 50% 28%,#ffc8a8 0,#e8799a 50%,#5b3a7a 100%)}
+.pinov.tm-dw .ctrl h2{color:#5a2a41}
+.pinov.tm-dw .ctrl .sub,.pinov.tm-dw .ctrl .lnk{color:#8a4a63}
+.pinov.tm-dw .ctrl .err{color:#c2185b}
+.pinov.tm-dw .snd{color:#5a2a41;border-color:#5a2a4155;background:#ffffff66}
+@media (prefers-reduced-motion:reduce){.sky span{animation:none!important;opacity:.35}}
+</style>
+</head>
+<body>
+<div id="sky" class="sky"></div>
+
+<div id="setup" class="scr">
+ <div class="deco">🌸 💗 ✨</div><h1>الإعداد</h1>
+ <p class="sub">دخل المعلومات العامة ديال Supabase (Project URL و publishable key). المرة الأولى غير.</p>
+ <div class="card"><input id="su" type="text" placeholder="Project URL" dir="ltr"><div style="height:8px"></div><input id="sk" type="text" placeholder="Publishable key" dir="ltr">
+ <div class="row"><button onclick="saveSetup()">حفظ</button></div></div>
+</div>
+
+<div id="login" class="scr">
+ <div class="deco">🌸 💗 ✨</div><h1>كتابنا ♡</h1><p class="sub">غير حسابين مسموح ليهم</p>
+ <div class="card"><input id="le" type="email" placeholder="الإيميل" dir="ltr"><div style="height:8px"></div><input id="lp" type="password" placeholder="كلمة السر" dir="ltr">
+ <div class="err" id="lerr"></div><div class="row"><button onclick="login()">دخول 💕</button></div></div>
+</div>
+
+<div id="app" class="scr">
+ <div class="ver" id="ver">نسخة 3.6</div>
+ <div class="top"><button id="msgBtn" onclick="openMsgs()" aria-label="الرسائل">💬</button><div class="deco" style="margin:0">🌸 💗 ✨</div><div style="display:flex;gap:6px"><button id="admBtn" hidden onclick="go('admin')" aria-label="الإعدادات">⚙️</button><button onclick="logout()" aria-label="خروج">🚪</button></div></div>
+ <div class="card cnt" id="cnt"></div>
+ <div class="card sun" id="pushBox" hidden></div>
+ <div id="main"></div>
+ <div class="nav" id="nav"></div>
+</div>
+
+
+
+<div class="pinov" id="pin" hidden role="dialog" aria-label="كتابنا، دخل الكود">
+ <div class="sky" id="pinSky"></div><div class="fx" id="pinFx"></div><div class="ivory"></div>
+ <button type="button" class="snd" id="snd" aria-label="الصوت">🔊</button>
+ <div class="stage"><div class="book">
+  <div class="lt"></div>
+  <div class="pg"><div class="fl">🌸 💗 🌸</div><div class="dt">اليوم</div><div class="big" id="cvDay"></div><div class="dt" id="cvDate"></div><div class="ln" id="cvLn">كل نهار صفحة جديدة فكتابنا ♡</div><div class="ln" id="cvLn2"></div></div>
+  <div class="lid">
+   <div class="face fr"><div class="f">🌷 🌸 🌷</div><div class="t">كتابنا ♡</div>
+    <svg class="hl" id="hl" viewBox="0 0 100 112" aria-hidden="true">
+     <defs>
+      <linearGradient id="gb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffeb9c"/><stop offset=".4" stop-color="#e8b23a"/><stop offset="1" stop-color="#9c6212"/></linearGradient>
+      <linearGradient id="gs" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f4f7fc"/><stop offset=".5" stop-color="#9aa6b8"/><stop offset="1" stop-color="#5d6a80"/></linearGradient>
+     </defs>
+     <g class="shackle"><path d="M32 56V34a18 18 0 0 1 36 0V56" fill="none" stroke="#3b4658" stroke-width="10" stroke-linecap="round"/><path d="M32 56V34a18 18 0 0 1 36 0V56" fill="none" stroke="url(#gs)" stroke-width="7" stroke-linecap="round"/></g>
+     <rect x="8" y="50" width="84" height="58" rx="14" fill="#6e430c"/>
+     <rect x="8" y="48" width="84" height="57" rx="14" fill="url(#gb)" stroke="#8a5510" stroke-width="1.5"/>
+     <rect x="13" y="51" width="74" height="9" rx="4.5" fill="#fff" opacity=".35"/>
+     <path class="ht" d="M50 78C40 70 35 63 40.500 59c4-2.500 7 0 9.500 3 2.500-3 5.500-5.500 9.500-3C65 63 60 70 50 78Z" fill="#7a4a0f" opacity=".85"/>
+     <rect x="18" y="80" width="64" height="17" rx="8.500" fill="#4a2e07" stroke="#2f1c04" stroke-width="1.5"/>
+     <circle class="pd" cx="26.5" cy="88" r="3.4"/><circle class="pd" cx="35.9" cy="88" r="3.4"/><circle class="pd" cx="45.3" cy="88" r="3.4"/><circle class="pd" cx="54.7" cy="88" r="3.4"/><circle class="pd" cx="64.1" cy="88" r="3.4"/><circle class="pd" cx="73.5" cy="88" r="3.4"/>
+    </svg>
+    <div class="h">غير حنا الجوج</div></div>
+   <div class="face bk">♡</div>
+  </div>
+ </div></div>
+ <div class="ctrl">
+  <h2 id="pinT"></h2><p class="sub" id="pinS"></p>
+  <div class="dots" id="pinD" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="err" id="pinE"></div>
+  <div class="pad" id="pinP"></div>
+  <button class="lnk" id="pinF" onclick="pinForgot()">نسيت الكود؟</button>
+ </div>
+</div>
+
+<div class="ov" id="ov">
+ <div class="bar"><h2 style="margin:0">الرسائل 💬</h2><button class="ghost" onclick="closeMsgs()">رجع</button></div>
+ <div id="ml"></div>
+ <div id="mf"><input id="mi" type="text" placeholder="كتب شي حاجة…" style="flex:1"><button onclick="sendMsg()">صيفط</button></div>
+</div>
+
+<script>
+const SPACE='1449f144-7e6a-40fc-b9d6-08962201d5e2', BUCKET='our-files';
+const START=new Date(2026,9,10,12);          // النهار 1 = 10 أكتوبر 2026
+const START_TS=new Date(2026,9,10,23,46,0);  // أول رسالة بيناتنا
+const QS=['شنو كنكون فالحياة ديالك؟','شنو أول حاجة لاحظتي فيا؟','شنو أكثر حاجة كتعجبك فيا؟','شنو الحاجة اللي بغيتي مني نديرها؟','لو كانت عندك قوة خارقة، شنو تكون؟','شنو الأحلام ديالك الصغار والكبار؟','فين بغيتي نسافرو بجوج؟','شنو أصعب حاجة عشتيها وتجاوزتيها؟','شنو الحاجة اللي كتفرحك فالنهار؟','شنو أحسن لحظة عشناها بجوج؟','كيفاش كتشوفي المستقبل ديالنا؟','شنو الحاجة اللي كتخليك تضحك ديما؟','شنو الحاجة اللي كتحسها فيك مختلفة على الناس؟','شنو الأكلة اللي كتفكرك فينا؟','شنو الحاجة اللي بغيتي تقولها وما قلتيهاش؟','شنو الأغنية اللي كتشبهنا؟','شنو الحاجة اللي تبغي تحلم بيها الليلة؟','شنو الحاجة اللي بدلات فيك من نهار عرفتينا؟','شنو الهدف اللي بغيتي تحققو هاد الشهر؟','شنو الكلمة اللي بغيتي تسمعها مني اليوم؟'];
+const $=s=>document.querySelector(s);
+const pad=n=>String(n).padStart(2,'0');
+const iso=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const dayDate=n=>{const d=new Date(START);d.setDate(d.getDate()+n-1);return d};
+const todayN=()=>{const t=new Date();t.setHours(12,0,0,0);return Math.max(1,Math.round((t-START)/864e5)+1)};
+const fmt=d=>d.toLocaleDateString('ar-MA',{weekday:'long',day:'numeric',month:'long'});
+function h(t,a={},...k){const e=document.createElement(t);for(const[x,v]of Object.entries(a)){if(x==='class')e.className=v;else if(x.startsWith('on'))e[x]=v;else e.setAttribute(x,v)}k.flat().forEach(c=>{if(c!=null)e.append(c)});return e}
+let sb,me,tab='today',viewDay=null,poll=null;
+/* v3.6-c4: وضع الكود الكاذب (DECOY) */
+let DECOY=false,metaP=Promise.resolve(),DM=[],DF={j:'',a:'',mood:null};
+
+function show(id){['setup','login','app'].forEach(i=>$('#'+i).classList.toggle('on',i===id))}
+function boot(){
+  const u=localStorage.getItem('sbu'),k=localStorage.getItem('sbk');
+  if(!u||!k)return show('setup');
+  sb=supabase.createClient(u,k);
+  sb.auth.getSession().then(({data})=>{if(data.session){me=data.session.user;gate()}else show('login')});
+}
+function saveSetup(){localStorage.setItem('sbu',$('#su').value.trim());localStorage.setItem('sbk',$('#sk').value.trim());boot()}
+async function login(){
+  $('#lerr').textContent='';
+  const {data,error}=await sb.auth.signInWithPassword({email:$('#le').value.trim(),password:$('#lp').value});
+  if(error){$('#lerr').textContent='الإيميل ولا كلمة السر ماشي صحاح';return}
+  me=data.user;logAct('login');gate();
+}
+async function dropPush(){try{const reg=await navigator.serviceWorker.getRegistration();const sub=reg&&await reg.pushManager.getSubscription();if(sub){await sb.from('push_subs').delete().eq('endpoint',sub.endpoint);await sub.unsubscribe()}}catch(e){}}
+async function logout(){await dropPush();await sb.auth.signOut();clearPin();me=null;isAdmin=false;DECOY=false;{const b=$('#admBtn');if(b)b.hidden=true}show('login')}
+
+const TABS=[['today','📖','اليوم'],['days','📅','الأيام'],['zwin','💌','زوين'],['inst','⚡','لحظة'],['game','🎲','ألعابنا'],['dream','🌠','أحلامنا']];
+let tk;
+function tick(){
+  const n=new Date(),s=Math.floor((n-new Date(n.getFullYear(),n.getMonth(),n.getDate()))/1000),d=todayN(),hh=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;
+  $('#cnt').replaceChildren(h('div',{class:'st'},'من أول هضرة بينا 💞'),h('b',{},d+' يوم و '+hh+' ساعة و '+m+' دقيقة و '+ss+' ثانية'));
+}
+
+const PIN_LEN=6,PIN_RELOCK=30000;
+let pinBuf='',pinMode='',pinFirst='',pinDone=null,pinBusy=false,pinT=null,hiddenAt=0;
+const pinStored=()=>{try{return JSON.parse(localStorage.getItem('kpin')||'null')}catch(e){return null}};
+const clearPin=()=>['kpin','kpinfail','kpinlock','kdecoy'].forEach(k=>localStorage.removeItem(k));
+const b64=u=>btoa(String.fromCharCode(...u)), unb64=t=>Uint8Array.from(atob(t),c=>c.charCodeAt(0));
+async function pinHash(pin,salt,it){
+  const k=await crypto.subtle.importKey('raw',new TextEncoder().encode(pin),'PBKDF2',false,['deriveBits']);
+  return new Uint8Array(await crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt,iterations:it},k,256));
+}
+const sameBytes=(a,b)=>{if(a.length!==b.length)return false;let r=0;for(let i=0;i<a.length;i++)r|=a[i]^b[i];return r===0};
+/* الكود الكاذب: مخزن كهاش فـ app_settings (decoy_pin = salt.hash.iterations)، والافتراضي 000000 */
+async function decoyMatch(v){
+  const s=APPSET.decoy_pin||localStorage.getItem('kdecoy');
+  if(typeof s==='string'&&s.split('.').length===3){
+    const [a,b,c]=s.split('.');
+    try{return sameBytes(await pinHash(v,unb64(a),+c),unb64(b))}catch(e){return false}
+  }
+  return v==='000000';
+}
+const pinMsg=t=>{$('#pinE').textContent=t||''};
+function pinRender(all){const n=all?PIN_LEN:pinBuf.length;['#pin .pd','#pinD i'].forEach(q=>document.querySelectorAll(q).forEach((e,i)=>e.classList.toggle('f',i<n)))}
+function pinTexts(){
+  const T={setup1:['دير كود سري 🔒','6 أرقام. غير نتا لي كتعرفو'],setup2:['عاود كتب نفس الكود','باش نتأكدو'],unlock:['دخل الكود 🔒','كتابنا محمي']}[pinMode];
+  $('#pinT').textContent=T[0];$('#pinS').textContent=T[1];$('#pinF').hidden=pinMode!=='unlock';
+}
+function pinLockLeft(){const u=+localStorage.getItem('kpinlock')||0;return Math.max(0,Math.ceil((u-Date.now())/1000))}
+function pinTick(){
+  clearTimeout(pinT);const l=pinLockLeft(),off=l>0;
+  $('#pinP').querySelectorAll('button').forEach(b=>b.disabled=off);
+  if(off){pinMsg('بزاف د المحاولات. عاود من بعد '+l+' ثانية');pinT=setTimeout(pinTick,1000)}
+  else if($('#pinE').textContent.startsWith('بزاف'))pinMsg('');
+}
+function pinBuild(){
+  const pad=$('#pinP');pad.replaceChildren();
+  ['1','2','3','4','5','6','7','8','9','','0','b'].forEach(k=>{
+    if(k==='')return pad.append(h('button',{class:'nb',tabindex:'-1','aria-hidden':'true'},' '));
+    pad.append(h('button',{type:'button','data-k':k,'aria-label':k==='b'?'مسح':k,onclick:()=>pinKey(k)},k==='b'?'⌫':k));
+  });
+}
+function pinOpen(mode,done){
+  pinMode=mode;pinDone=done;pinBuf='';pinFirst='';pinBusy=false;
+  if(!$('#pinP').children.length)pinBuild();
+  pinTexts();pinMsg('');pinRender();const c=$('#pin');pinTm.forEach(clearTimeout);pinTm=[];c.classList.remove('rec','unl','open','zoom','out');c.hidden=false;pinTheme();pinTick();
+}
+const PH=h=>h>=5&&h<8?'dw':h>=8&&h<12?'am':h>=12&&h<17?'pm':h>=17&&h<20?'sn':'nt';
+const SKY={nt:['✨','⭐','✨','🌟'],sn:['🌸','💗','🌸','🌸'],dw:['☁️','☁️','🕊️'],am:['☁️','☁️','🦋'],pm:['☁️','🦋','🌸']};
+function skyBuild(el,k){
+  if(!el)return;el.replaceChildren();
+  const L=SKY[k],n=k==='nt'?14:8,r=Math.random;
+  for(let i=0;i<n;i++){
+    const e=L[i%L.length],s=document.createElement('span');s.textContent=e;
+    let nm,d,o=.5,top=(r()*85).toFixed(0)+'%',fs=(14+r()*14).toFixed(0);
+    if(e==='✨'||e==='⭐'||e==='🌟'){nm='skTw';d=3+r()*4}
+    else if(e==='☁️'){nm='skDr';d=70+r()*50;o=.55;fs=(34+r()*30).toFixed(0)}
+    else if(e==='🌸'||e==='💗'){nm='skFa';d=14+r()*10;top='0'}
+    else{nm='skBo';d=5+r()*4}
+    s.style.cssText='left:'+(r()*92).toFixed(0)+'%;top:'+top+';font-size:'+fs+'px;opacity:'+o+';animation:'+nm+' '+d.toFixed(1)+'s '+(nm==='skDr'||nm==='skFa'?'linear':'ease-in-out')+' infinite;animation-delay:-'+(r()*d).toFixed(1)+'s';
+    el.append(s);
+  }
+}
+const lerpC=(a,b,t)=>{const p=x=>[1,3,5].map(i=>parseInt(x.slice(i,i+2),16)),A=p(a),B=p(b);return '#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('')};
+const TH=[[0,'#e6dbf5','#f5ecf9'],[5,'#e6dbf5','#f5ecf9'],[7,'#ffe4d2','#fff2ea'],[10,'#fff0c8','#fff8ec'],[13,'#ffe3ee','#fff0f6'],[17,'#ffe3ee','#fff0f6'],[19,'#ffd2d0','#ffeaf1'],[21,'#e6dbf5','#f5ecf9'],[24,'#e6dbf5','#f5ecf9']];
+let skyK='';
+function applyTheme(){
+  const d=new Date(),x=d.getHours()+d.getMinutes()/60;
+  let i=0;while(i<TH.length-2&&x>=TH[i+1][0])i++;
+  const a=TH[i],b=TH[i+1],t=Math.min(1,Math.max(0,(x-a[0])/(b[0]-a[0])));
+  const top=lerpC(a[1],b[1],t),bg=lerpC(a[2],b[2],t),R=document.documentElement;
+  R.style.setProperty('--top',top);R.style.setProperty('--bg',bg);
+  const m=document.querySelector('meta[name=theme-color]');if(m)m.content=top;
+  const k=PH(d.getHours());if(k!==skyK){skyK=k;skyBuild($('#sky'),k)}
+}
+function pinTheme(){
+  const k=PH(new Date().getHours()),c=$('#pin');
+  c.classList.remove('tm-dw','tm-am','tm-pm','tm-sn','tm-nt');c.classList.add('tm-'+k);
+  $('#cvLn').textContent={dw:'صباح الخير، فاقت الدنيا بجوج 🌅',am:'صباح الخير، نهار جديد بجوج ❤️',pm:'نهارك زوين، توحشناك ❤️',sn:'مساء النور، الغروب زوين وانتما بجوج 🌇',nt:'مساء الخير، غدا نهار آخر بجوج 🌙'}[k];
+  $('#cvLn2').textContent='';skyBuild($('#pinSky'),k);
+}
+async function lastOther(){
+  const mk=(t,col,uc)=>sb.from(t).select(col).eq('space_id',SPACE).neq(uc,me.id).order(col,{ascending:false}).limit(1).then(r=>(r.error||!r.data||!r.data[0])?0:new Date(r.data[0][col]).getTime()).catch(()=>0);
+  const ts=await Promise.all([mk('messages','created_at','created_by'),mk('photos','created_at','author_id'),mk('day_entries','updated_at','author_id'),mk('miss_you','created_at','author_id')]);
+  const t=Math.max(...ts),ad=myWho()==='adil',hello='مرحبا '+(ad?'عادل':'خديجة')+'، ';
+  if(!t||Date.now()-t>3*864e5)return hello+'كتابك كيتسناك ❤️';
+  const m=Math.max(1,Math.round((Date.now()-t)/6e4)),ago=m<2?'دقيقة':m<60?m+' دقيقة':m<1440?Math.round(m/60)+' ساعة':Math.round(m/1440)+' يوم';
+  return hello+nm()+' '+(ad?'كانت كتفكر':'كان كيفكر')+' فيك من '+ago+' ❤️';
+}
+const RM=()=>matchMedia('(prefers-reduced-motion:reduce)').matches;
+let pinTm=[];const later=(f,ms)=>pinTm.push(setTimeout(f,ms));
+const BASE='rotateX(4deg) rotateY(-9deg)';
+const buzz=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
+/* ---- صوت (كيتخدم غير من بعد أول لمسة) ---- */
+let AC=null,sndOn=localStorage.getItem('ksnd')!=='0';
+function ac(){if(!sndOn)return null;try{if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume()}catch(e){return null}return AC}
+function tone(f,d,v,type,t0,f2){const c=ac();if(!c)return;const t=c.currentTime+(t0||0),o=c.createOscillator(),g=c.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+d+.03)}
+function noise(d,v,f0,f1,t0,type){const c=ac();if(!c)return;const n=Math.floor(c.sampleRate*d),bf=c.createBuffer(1,n,c.sampleRate),a=bf.getChannelData(0);for(let i=0;i<n;i++)a[i]=Math.random()*2-1;const sr=c.createBufferSource();sr.buffer=bf;const fl=c.createBiquadFilter();fl.type=type||'bandpass';const t=c.currentTime+(t0||0);fl.frequency.setValueAtTime(f0,t);fl.frequency.linearRampToValueAtTime(f1,t+d);const g=c.createGain();g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(v,t+d*.3);g.gain.linearRampToValueAtTime(.0001,t+d);sr.connect(fl);fl.connect(g);g.connect(c.destination);sr.start(t)}
+const SND={
+  key(){tone(1400,.05,.05,'sine',0,700);noise(.03,.04,3000,2000,0,'highpass')},
+  back(){tone(900,.05,.04,'sine',0,500)},
+  err(){tone(220,.18,.05,'triangle',0,160)},
+  unlock(){noise(.05,.12,4000,3000,0,'highpass');tone(2400,.5,.05,'sine',.02,2300);tone(3600,.35,.025,'sine',.04);tone(180,.12,.08,'triangle',.05,90)},
+  cover(){tone(90,.45,.14,'sine',0,45);noise(.5,.06,500,200,0,'lowpass')},
+  pages(){for(let i=0;i<5;i++)noise(.22,.035,2500+i*200,1500,i*.28,'bandpass')}
+};
+/* ---- حركات ---- */
+function sparks(x,y,n,r){
+  if(RM())return;const L=$('#pinFx');
+  for(let i=0;i<n;i++){
+    const s=document.createElement('span');s.className='sp';const a=Math.random()*6.283,d=r*(.5+Math.random()*.8),z=2+Math.random()*3;
+    s.style.cssText='left:'+x+'px;top:'+y+'px;width:'+z+'px;height:'+z+'px';L.append(s);
+    const an=s.animate([{transform:'translate(-50%,-50%) scale(1)',opacity:1},{transform:'translate(calc(-50% + '+Math.cos(a)*d+'px),calc(-50% + '+(Math.sin(a)*d-12)+'px)) scale(0)',opacity:0}],{duration:500+Math.random()*400,easing:'cubic-bezier(.2,.7,.3,1)'});
+    an.onfinish=()=>s.remove();
+  }
+}
+function lockTick(d){
+  if(RM())return;const sh=document.querySelector('#hl .shackle'),hl=$('#hl');
+  if(sh)sh.animate([{transform:'translateY(0)'},{transform:'translateY('+(-2.2*d)+'px) rotate('+(1.5*d)+'deg)'},{transform:'translateY(0)'}],{duration:220,easing:'cubic-bezier(.3,1.6,.5,1)'});
+  hl.animate([{transform:'rotate(0)'},{transform:'rotate('+(-1.4*d)+'deg) translateY(1px)'},{transform:'rotate(0)'}],{duration:200});
+}
+function bookNudge(d){
+  if(RM())return;
+  $('#pin .book').animate([{transform:BASE},{transform:'rotateX('+(4+d*.9)+'deg) rotateY('+(-9-d*1.4)+'deg) translateY(1px)'},{transform:BASE}],{duration:260,easing:'cubic-bezier(.3,1.5,.5,1)'});
+}
+function bookShake(){
+  if(RM())return;
+  $('#pin .book').animate([{transform:BASE},{transform:'translateX(-7px) '+BASE},{transform:'translateX(7px) '+BASE},{transform:'translateX(-4px) '+BASE},{transform:'translateX(3px) '+BASE},{transform:BASE}],{duration:380,easing:'ease-out'});
+}
+function pinFx(k){
+  if(k==='b'){SND.back();buzz(5);lockTick(-1);bookNudge(-1);return}
+  SND.key();buzz(8);
+  const b=document.querySelector('#pinP [data-k="'+k+'"]');
+  if(b){const r=b.getBoundingClientRect();sparks(r.left+r.width/2,r.top+r.height/2,7,34)}
+  lockTick(1);bookNudge(1);
+}
+function orb(){
+  if(RM())return;
+  const a=$('#pinP').getBoundingClientRect(),b=$('#pin .book').getBoundingClientRect(),L=$('#pinFx'),o=document.createElement('span');
+  o.className='orb';const x0=a.left+a.width/2,y0=a.top+a.height/2,dx=b.left+b.width/2-x0,dy=b.top+b.height*.55-y0;
+  o.style.left=x0+'px';o.style.top=y0+'px';L.append(o);
+  const T=(x,y,sc)=>'translate(calc(-50% + '+x+'px),calc(-50% + '+y+'px)) scale('+sc+')';
+  const an=o.animate([{transform:T(0,0,.5),opacity:0},{transform:T(dx*.2,dy*.2,.8),opacity:1,offset:.2},{transform:T(dx,dy,1.4),opacity:.9,offset:.85},{transform:T(dx,dy,2.4),opacity:0}],{duration:850,easing:'ease-in-out'});
+  an.onfinish=()=>o.remove();
+}
+/* ---- الفتح: A تعرّف، B القفل، C الغلاف، D الكاميرا ---- */
+function pinOk(isDec){
+  const c=$('#pin'),k=RM()?.2:1;
+  if(c.classList.contains('rec'))return;
+  const prev=DECOY;DECOY=!!isDec;
+  pinTm.forEach(clearTimeout);pinTm=[];
+  pinBuf='';pinRender(true);
+  $('#cvDay').textContent='النهار '+todayN();$('#cvDate').textContent=fmt(new Date());
+  if(!isDec)lastOther().then(t=>{if(t)$('#cvLn2').textContent=t}).catch(()=>{});
+  c.classList.add('rec');buzz(15);orb();
+  later(()=>{c.classList.add('unl');SND.unlock();buzz([25,40,25]);const r=$('#hl').getBoundingClientRect();sparks(r.left+r.width/2,r.top+r.height*.4,22,70)},700*k);
+  later(()=>{const r=$('#hl').getBoundingClientRect();sparks(r.left+r.width/2,r.top+r.height*.6,14,50)},1200*k);
+  later(()=>{c.classList.add('open');SND.cover()},1700*k);
+  later(()=>SND.pages(),2400*k);
+  later(()=>c.classList.add('zoom'),3000*k);
+  later(()=>{const d=pinDone;pinDone=null;if(d)d();else if(prev!==DECOY)start()},5000*k);
+  later(()=>c.classList.add('out'),5200*k);
+  later(()=>{c.hidden=true;c.classList.remove('rec','unl','open','zoom','out');pinRender()},6400*k);
+}
+function pinShake(){const d=$('#hl');d.classList.remove('shake');void d.getBoundingClientRect();d.classList.add('shake');bookShake();SND.err();buzz([40,40,40])}
+async function pinKey(k){
+  if(pinBusy||pinLockLeft()>0||$('#pin').classList.contains('rec'))return;
+  if(k==='b'){if(!pinBuf)return;pinBuf=pinBuf.slice(0,-1);pinMsg('');pinFx('b');return pinRender()}
+  if(pinBuf.length>=PIN_LEN)return;
+  pinBuf+=k;pinRender();pinFx(k);
+  if(pinBuf.length<PIN_LEN)return;
+  const v=pinBuf;pinBusy=true;
+  try{
+    if(pinMode==='setup1'){pinFirst=v;pinBuf='';pinMode='setup2';pinTexts();pinRender();return}
+    if(pinMode==='setup2'){
+      if(v!==pinFirst){pinMode='setup1';pinBuf='';pinFirst='';pinTexts();pinRender();pinShake();pinMsg('ما تطابقاش، عاود من الأول');return}
+      await Promise.race([metaP,new Promise(r=>setTimeout(r,1500))]);
+      if(await decoyMatch(v)){pinMode='setup1';pinBuf='';pinFirst='';pinTexts();pinRender();pinShake();pinMsg('هاد الكود ما يصلحش، ختار كود آخر');return}
+      const salt=crypto.getRandomValues(new Uint8Array(16)),it=150000;
+      const hh=await pinHash(v,salt,it);
+      localStorage.setItem('kpin',JSON.stringify({s:b64(salt),h:b64(hh),i:it}));
+      localStorage.removeItem('kpinfail');localStorage.removeItem('kpinlock');
+      return pinOk(false);
+    }
+    const st=pinStored();
+    if(!st)return pinForgot(true);
+    const hh=await pinHash(v,unb64(st.s),st.i);
+    if(sameBytes(hh,unb64(st.h))){localStorage.removeItem('kpinfail');localStorage.removeItem('kpinlock');return pinOk(false)}
+    await Promise.race([metaP,new Promise(r=>setTimeout(r,1500))]);
+    if(await decoyMatch(v))return pinOk(true);
+    const f=(+localStorage.getItem('kpinfail')||0)+1;localStorage.setItem('kpinfail',f);
+    pinBuf='';pinRender();pinShake();
+    if(f>=10)return pinForgot(true,'بزاف د المحاولات الغالطة. دخل من جديد بالإيميل وكلمة السر');
+    if(f>=5)localStorage.setItem('kpinlock',Date.now()+30000*Math.pow(2,f-5));
+    pinMsg('عاود حاول، كتابنا غير ليا ولك ❤️');pinTick();
+  }finally{pinBusy=false}
+}
+async function pinForgot(silent,msg){
+  if(!silent&&!confirm('غادي تخرج من الحساب وتدخل من جديد بالإيميل وكلمة السر، من بعد تدير كود جديد. واش متأكد؟'))return;
+  clearPin();try{await dropPush();await sb.auth.signOut()}catch(e){}
+  me=null;DECOY=false;pinTm.forEach(clearTimeout);pinTm=[];$('#pin').hidden=true;$('#pin').classList.remove('rec','unl','open','zoom','out');pinDone=null;show('login');$('#lerr').textContent=msg||'';
+}
+function gate(){metaP=loadMeta();pinOpen(pinStored()?'unlock':'setup1',start)}
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){hiddenAt=Date.now();return}
+  if(me&&pinStored()&&$('#pin').hidden&&hiddenAt&&Date.now()-hiddenAt>PIN_RELOCK)pinOpen('unlock',null);
+});
+document.addEventListener('keydown',e=>{
+  if($('#pin').hidden||$('#pin').classList.contains('rec'))return;
+  if(/^[0-9]$/.test(e.key))pinKey(e.key);else if(e.key==='Backspace')pinKey('b');
+});
+let instT=null;
+function start(){
+  if(DECOY)return startDecoy();
+  document.body.classList.remove('dcy');document.title='كتابنا ♡';
+  show('app');logAct('open');
+  {const v=$('#ver');if(v)v.style.display='';const ab=$('#admBtn');if(ab)ab.hidden=!isAdmin}
+  if(!routeHash())go('today',null,true);if(!$('#ov').classList.contains('on'))history.replaceState({k:'nav',tab:tab,day:viewDay},'');tick();clearInterval(tk);tk=setInterval(tick,1000);pushUI();clearInterval(instT);instT=setInterval(checkAll,60000);checkMsgs();regDevice().then(checkDev);setTimeout(letterPrompt,600);setTimeout(missCheck,1200)}
+function go(t,n,fp){if(t==='admin'&&(!isAdmin||DECOY))t='today';
+  const ch=t!==tab||(n||null)!==viewDay;
+  stopCam();tab=t;viewDay=n||null;
+  if(!fp&&ch)history.pushState({k:'nav',tab:t,day:viewDay},'');
+  $('#nav').replaceChildren(...TABS.map(([id,ic,tx])=>h('button',{class:id===tab?'on':'','data-t':id,onclick:()=>go(id)},h('span',{},ic),tx)));
+  render();checkInst();
+}
+async function render(){
+  stopCam();const m=$('#main');
+  if(DECOY){m.replaceChildren(decoyPage());return}
+  m.replaceChildren(h('p',{class:'sub'},'تحميل…'));
+  try{
+    const out=await ({today:()=>dayPage(todayN(),false),days:()=>viewDay?dayPage(viewDay,true):daysPage(),zwin:zwinPage,inst:instPage,pics:picsPage,dream:dreamsPage,song:songPage,game:gamePage,report:reportPage,dates:datesPage,admin:adminPage}[tab])();
+    m.replaceChildren(out);
+  }catch(e){m.replaceChildren(h('div',{class:'card'},'وقع مشكل: '+(e.message||e)))}
+}
+
+/* ===== الجهاز (Device ID) + إشعار جهاز جديد ===== */
+function devId(){
+  let d=null;try{d=localStorage.getItem('kdev')}catch(e){}
+  if(!d){d=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():('d'+Date.now().toString(36)+Math.random().toString(36).slice(2,10));try{localStorage.setItem('kdev',d)}catch(e){}}
+  return d;
+}
+function devLabel(){
+  const u=navigator.userAgent||'',m=u.match(/\(([^)]+)\)/);
+  return (m?m[1]:u).slice(0,110);
+}
+async function regDevice(){
+  try{
+    if(!me||!sb||DECOY)return;
+    const id=devId();
+    const r=await sb.from('devices').select('id').eq('user_id',me.id).eq('device_id',id).maybeSingle();
+    if(r.error)return;
+    if(r.data){await sb.from('devices').update({last_seen:new Date().toISOString()}).eq('id',r.data.id);return}
+    await sb.from('devices').insert({device_id:id,label:devLabel()});
+  }catch(e){}
+}
+async function checkDev(){
+  try{
+    if(!me||!sb||!isAdmin||DECOY)return;
+    const btn=$('#admBtn');if(!btn)return;
+    const {data,error}=await sb.from('devices').select('id').eq('is_new',true).eq('ack',false).limit(1);
+    if(error)return;
+    const old=btn.querySelector('.rd'),has=data&&data.length>0;
+    if(has&&!old)btn.append(h('i',{class:'rd'}));
+    if(!has&&old)old.remove();
+  }catch(e){}
+}
+
+/* ===== التطبيق الكاذب (يتفتح بالكود الكاذب) — ما كيتصل بحتى داطا حقيقية ===== */
+function startDecoy(){
+  show('app');
+  clearInterval(tk);clearInterval(instT);clearInterval(poll);stopCam();
+  if(LB)closeLb(true);
+  $('#ov').classList.remove('on');$('#ml').replaceChildren();
+  $('#main').replaceChildren();
+  $('#pushBox').hidden=true;
+  {const ab=$('#admBtn');if(ab){ab.hidden=true;const r=ab.querySelector('.rd');if(r)r.remove()}const mr=document.querySelector('#msgBtn .rd');if(mr)mr.remove();const v=$('#ver');if(v)v.style.display='none'}
+  DM=[];DF={j:'',a:'',mood:null};
+  history.replaceState(null,'',location.pathname+location.search);
+  document.body.classList.add('dcy');document.title='ملاحظات';DN=null;
+  go('today',null,true);
+  history.replaceState({k:'nav',tab:'today',day:null},'');
+}
+let DN=null;
+function decoyPage(){
+  if(!DN){
+    const t=Date.now(),D=864e5;
+    DN={open:null,notes:[
+      {id:1,t:'لائحة السوق',b:'خبز\nحليب\nبيض\nزيت الزيتون\nطماطم وبصلة\nقهوة',d:t-2*D},
+      {id:2,t:'أفكار',b:'نحضر الأسبوع الجاي:\n- نرتب الكتب\n- نمشي للرياضة\n- نتصل بالعائلة',d:t-5*D},
+      {id:3,t:'مواعيد',b:'الثلاثاء: حصة الصباح\nالجمعة: مراجعة مع الأصحاب',d:t-9*D}]};
+  }
+  const box=h('div'),rr=()=>{$('#main').replaceChildren(decoyPage())};
+  const fd=x=>new Date(x).toLocaleDateString('ar-MA',{day:'numeric',month:'short'});
+  if(DN.open!==null){
+    const n=DN.notes.find(x=>x.id===DN.open);
+    if(!n){DN.open=null;return decoyPage()}
+    const ti=h('input',{type:'text',placeholder:'العنوان',class:'nt-t'}),ta=h('textarea',{placeholder:'اكتب هنا…',class:'nt-b'});
+    ti.value=n.t;ta.value=n.b;
+    ti.oninput=()=>{n.t=ti.value;n.d=Date.now()};ta.oninput=()=>{n.b=ta.value;n.d=Date.now()};
+    const back=()=>{if(!n.t.trim()&&!n.b.trim())DN.notes=DN.notes.filter(x=>x.id!==n.id);DN.open=null;rr()};
+    box.append(h('div',{class:'nt-bar'},
+      h('button',{class:'nt-lk',onclick:back},'‹ ملاحظات'),
+      h('button',{class:'nt-lk','aria-label':'مسح',onclick:()=>{if(!confirm('تمسح هاد الملاحظة؟'))return;DN.notes=DN.notes.filter(x=>x.id!==n.id);DN.open=null;rr()}},'🗑')),ti,ta);
+    return box;
+  }
+  box.append(h('div',{class:'nt-bar'},h('h1',{class:'nt-h'},'ملاحظات'),
+    h('button',{class:'nt-add','aria-label':'ملاحظة جديدة',onclick:()=>{const id=Date.now();DN.notes.unshift({id,t:'',b:'',d:id});DN.open=id;rr()}},'＋')));
+  if(!DN.notes.length)box.append(h('div',{class:'nt-e'},'ما كاين حتى ملاحظة'));
+  DN.notes.slice().sort((x,y)=>y.d-x.d).forEach(n=>{
+    const first=(n.b||'').split('\n').find(x=>x.trim())||'';
+    box.append(h('div',{class:'nt-c',onclick:()=>{DN.open=n.id;rr()}},h('b',{},n.t||'بدون عنوان'),h('div',{class:'nt-p'},fd(n.d)+' · '+(first.slice(0,60)||'بلا نص إضافي'))));
+  });
+  return box;
+}
+
+async function signed(path){const {data}=await sb.storage.from(BUCKET).createSignedUrl(path,3600);return data?data.signedUrl:''}
+function audioEl(path){const a=h('audio',{controls:''});signed(path).then(u=>a.src=u);return a}
+const fmtD=x=>new Date(x).toLocaleDateString('ar-MA',{day:'numeric',month:'long',year:'numeric'});
+async function shrink(file){
+  if(APPSET.compress===false)return file;
+  try{
+    const bmp=await createImageBitmap(file);
+    const k=Math.min(1,1600/Math.max(bmp.width,bmp.height));
+    const c=document.createElement('canvas');c.width=Math.round(bmp.width*k);c.height=Math.round(bmp.height*k);
+    c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);
+    const b=await new Promise(r=>c.toBlob(r,'image/jpeg',0.82));
+    return b||file;
+  }catch(e){return file}
+}
+async function cdCard(){
+  const {data,error}=await sb.from('countdowns').select('*').eq('space_id',SPACE).order('target_date');
+  if(error)return null;
+  const t0=new Date();t0.setHours(0,0,0,0);
+  const box=h('div',{class:'card'},h('b',{class:'t'},'⏳ كنتسناو'));
+  (data||[]).forEach(r=>{
+    const n=Math.round((new Date(r.target_date+'T00:00:00')-t0)/864e5);
+    if(n<0)return;
+    const row=h('div',{class:'cd'},h('span',{},(n===0?'🎉 اليوم: ':'بقاو '+n+' يوم على: ')+r.title));
+    if(r.created_by===me.id)row.append(h('button',{class:'ghost mini',onclick:async()=>{if(confirm('تمسح هاد التاريخ؟')){await sb.from('countdowns').delete().eq('id',r.id);render()}}},'🗑'));
+    box.append(row);
+  });
+  const ti=h('input',{type:'text',placeholder:'شنو كنتسناو؟ (مثلا: نلاقاوك)',style:'margin-top:8px'}),di=h('input',{type:'date'});
+  const er=h('div',{class:'err'});
+  box.append(ti,h('div',{class:'row'},di,h('button',{class:'ghost',onclick:async()=>{
+    if(!ti.value.trim()||!di.value){er.textContent='كتب العنوان وختار التاريخ';return}
+    const r=await sb.from('countdowns').insert({space_id:SPACE,title:ti.value.trim(),target_date:di.value,created_by:me.id});
+    if(r.error)er.textContent='ما تحفظش: '+r.error.message;else render();
+  }},'زيد ⏳')),er);
+  return box;
+}
+async function lettersBox(){
+  const {data,error}=await sb.from('secret_letters').select('*').eq('space_id',SPACE).order('unlock_at',{ascending:false});
+  if(error)return null;
+  const box=h('div',{},h('h2',{},'💌 رسائل سرية 🔒'),h('p',{class:'sub'},'كتب رسالة وحدد النهار اللي تتفتح فيه للطرف الآخر'));
+  const now=Date.now();
+  (data||[]).forEach(r=>{
+    const mineL=r.created_by===me.id,open=new Date(r.unlock_at)<=now;
+    if(!mineL&&!open)return;
+    const t=mineL?(open?'من عندي · تفتحات 🔓':'من عندي · 🔒 تتفتح '+fmtD(r.unlock_at)):'ليك 💌 · تفتحات '+fmtD(r.unlock_at);
+    const c=h('div',{class:'card'+(open?' sun':'')},h('b',{class:'t'},t),h('div',{class:'st'},'✍️ كُتبت نهار '+fmtD(r.created_at||r.unlock_at)),h('div',{style:'white-space:pre-wrap;margin-top:6px'},r.content));
+    if(mineL)c.append(h('div',{class:'row'},h('button',{class:'ghost mini',onclick:async()=>{if(confirm('تمسح هاد الرسالة؟')){await sb.from('secret_letters').delete().eq('id',r.id);render()}}},'🗑')));
+    box.append(c);
+  });
+  const ta=h('textarea',{placeholder:'كتب الرسالة السرية…',style:'min-height:80px'}),di=h('input',{type:'date'}),er=h('div',{class:'err'});
+  const tm=new Date();tm.setDate(tm.getDate()+1);di.min=iso(tm);
+  box.append(h('div',{class:'card sun'},ta,h('div',{class:'row'},h('span',{class:'st'},'تتفتح نهار:'),di),h('div',{class:'row'},h('button',{onclick:async()=>{
+    if(!ta.value.trim()||!di.value){er.textContent='كتب الرسالة وختار نهار الفتح';return}
+    const r=await sb.from('secret_letters').insert({space_id:SPACE,created_by:me.id,content:ta.value.trim(),unlock_at:new Date(di.value+'T00:00:00').toISOString()});
+    if(r.error)er.textContent='ما تحفظاتش: '+r.error.message;else render();
+  }},'خبّيها 🔒')),er));
+  return box;
+}
+
+/* ===== v3.6-c12: تواريخنا المهمة 💞 ===== */
+const dWord=n=>n===1?'يوم واحد':n===2?'يومين':n+' أيام';
+async function datesBanner(){
+  try{
+    const {data,error}=await sb.from('love_dates').select('*');
+    if(error||!data||!data.length)return null;
+    const t0=new Date();t0.setHours(0,0,0,0);const L=[];
+    data.forEach(r=>{
+      const d=new Date(r.date+'T00:00:00'),past=Math.round((t0-d)/864e5);
+      let left;
+      if(d>=t0)left=Math.round((d-t0)/864e5);
+      else{let nx=new Date(t0.getFullYear(),d.getMonth(),d.getDate());if(nx<t0)nx=new Date(t0.getFullYear()+1,d.getMonth(),d.getDate());left=Math.round((nx-t0)/864e5)}
+      if(left===0)L.push('🎉 اليوم: '+r.title+(past>0?' · فات '+past+' يوم من نهار '+fmtD(r.date+'T12:00:00'):''));
+      else if(left<=3)L.push('💞 '+(left===1?'بقى ':'بقاو ')+dWord(left)+' على: '+r.title);
+    });
+    if(!L.length)return null;
+    return h('div',{class:'card sun'},...L.map(x=>h('div',{style:'font-weight:700;margin:4px 0'},x)));
+  }catch(e){return null}
+}
+async function datesPage(){
+  const box=h('div');
+  box.append(h('button',{class:'ghost',onclick:()=>go('days')},'↩ رجع للأيام'),h('h1',{},'تواريخنا المهمة 💞'),h('p',{class:'sub'},'التواريخ اللي ما بغيناش ننساوها'));
+  const {data,error}=await sb.from('love_dates').select('*').order('date',{ascending:true});
+  if(error){box.append(h('div',{class:'card'},h('div',{class:'err'},'خاصك تدير SQL ديال love_dates: '+error.message)));return box}
+  const t0=new Date();t0.setHours(0,0,0,0);
+  (data||[]).forEach(r=>{
+    const n=Math.round((t0-new Date(r.date+'T00:00:00'))/864e5);
+    const c=h('div',{class:'card'},h('b',{class:'t'},'💞 '+r.title),
+      h('div',{class:'st'},fmtD(r.date+'T12:00:00')+' · '+(n>0?'فات '+n+' يوم':n===0?'اليوم 🎉':'بقاو '+(-n)+' يوم')));
+    if(r.description)c.append(h('div',{style:'white-space:pre-wrap;margin-top:6px'},r.description));
+    if(r.photo_path){const im=h('img',{class:'pic'});signed(r.photo_path).then(u=>{im.src=u;im.onclick=()=>lightbox(u)});c.append(im)}
+    if(r.author_id===me.id)c.append(h('div',{class:'row'},h('button',{class:'ghost mini',onclick:async()=>{
+      if(!confirm('تمسح هاد التاريخ؟'))return;
+      if(r.photo_path)await sb.storage.from(BUCKET).remove([r.photo_path]);
+      await sb.from('love_dates').delete().eq('id',r.id);render();
+    }},'🗑')));
+    box.append(c);
+  });
+  if(!(data||[]).length)box.append(h('div',{class:'card'},'ما كاين حتى تاريخ بعد. زيد أول واحد ✨'));
+  const ti=h('input',{type:'text',placeholder:'العنوان (مثلا: نهار تعرفنا)'}),di=h('input',{type:'date'}),
+    de=h('textarea',{placeholder:'وصف قصير (اختياري)',style:'min-height:70px'}),
+    pf=h('input',{type:'file',accept:'image/*',style:'display:none'}),pn=h('span',{class:'st'}),er=h('div',{class:'err'});
+  pf.onchange=()=>{pn.textContent=pf.files[0]?'✅ '+pf.files[0].name:''};
+  const b=h('button',{type:'button'},'زيد التاريخ 💞');
+  b.onclick=async()=>{
+    er.textContent='';
+    if(!ti.value.trim()||!di.value){er.textContent='كتب العنوان وختار التاريخ';return}
+    b.disabled=true;let path=null;
+    try{
+      const f=pf.files[0];
+      if(f){
+        const sm=await shrink(f),isJ=sm!==f;
+        path=SPACE+'/photos/'+me.id+'/date-'+Date.now()+'.'+(isJ?'jpg':((f.name.split('.').pop()||'jpg').toLowerCase()));
+        const u=await sb.storage.from(BUCKET).upload(path,sm,{contentType:isJ?'image/jpeg':f.type});
+        if(u.error)throw u.error;
+      }
+      const r=await sb.from('love_dates').insert({space_id:SPACE,title:ti.value.trim(),date:di.value,description:de.value.trim()||null,photo_path:path});
+      if(r.error){if(path)await sb.storage.from(BUCKET).remove([path]);throw r.error}
+      render();
+    }catch(e){er.textContent='ما تحفظاتش: '+(e.message||e);b.disabled=false}
+  };
+  box.append(h('div',{class:'card sun'},h('b',{class:'t'},'زيد تاريخ جديد'),ti,h('div',{style:'height:8px'}),di,h('div',{style:'height:8px'}),de,
+    h('div',{class:'row'},h('button',{type:'button',class:'ghost',onclick:()=>pf.click()},'📷 صورة (اختياري)'),pf,pn),h('div',{class:'row'},b),er));
+  return box;
+}
+
+/* ===== v3.6-c14: جمعة التذكّر + ألعابنا + أحلامنا ===== */
+async function fridayCard(){
+  try{
+    const d=new Date();if(d.getDay()!==5||d.getHours()<10)return null;
+    const wk=Math.floor(d.getTime()/6048e5),key='kfri_'+(me?me.id:'')+'_'+wk;
+    if(localStorage.getItem(key))return null;
+    const lim=new Date(Date.now()-14*864e5).toISOString();
+    const {data,error}=await sb.from('photos').select('*').eq('space_id',SPACE).like('path','%/inst-%').lt('created_at',lim).order('created_at',{ascending:true});
+    if(error||!data||!data.length)return null;
+    const p=data[wk%data.length],dd=Math.round((Date.now()-new Date(p.created_at))/864e5);
+    const ago=dd>=60?'قبل '+Math.round(dd/30)+' أشهر':dd>=30?'قبل شهر':'قبل '+dd+' يومًا';
+    const im=h('img',{class:'pic'});signed(p.path).then(u=>{im.src=u;im.onclick=()=>lightbox(u)});
+    const c=h('div',{class:'card sun'},h('b',{class:'t'},'🕰️ هل تتذكّر؟ '+ago),im);
+    if(p.caption)c.append(h('div',{class:'cp',style:'margin-top:6px'},p.caption));
+    c.append(h('div',{class:'row'},h('button',{onclick:()=>{try{localStorage.setItem(key,'1')}catch(e){}c.remove()}},'نعم، أتذكّر ❤️'),h('button',{class:'ghost',onclick:()=>openMsgs()},'احكِ لي 💬')));
+    return c;
+  }catch(e){return null}
+}
+const G=[
+['know','🧠','شكون كيعرف الآخر؟',['شنو أكثر أكلة كنبغي؟','شنو أكثر حاجة كتخوفني؟','شنو أول حاجة كنديرها ملي كنفيق؟']],
+['pref','🤔','تفضل؟',['تفضل نسافرو للبحر ولا للجبل؟ علاش؟','تفضل ليلة فالدار ولا خرجة؟','تفضل نهضرو بزاف ولا نسكتو ونرتاحو بجوج؟']],
+['never','🙈','عمري ما…',['عمري ما… (كمل بشي حاجة حقيقية فيك)','عمري ما ضحكت بزاف على…','عمري ما خبيت عليك…']],
+['song','🎧','خمن الأغنية',['شنو الأغنية اللي كتفكرك فيا؟','وصف ليا أغنية بلا ما تسميها وأنا نخمن','شنو أغنية نسمعوها بجوج فالطوموبيل؟']],
+['tf','✅','صح ولا غلط علينا',['صح ولا غلط: أنا كنفيق بكري أكثر منك','صح ولا غلط: نتا اللي كتعتذر أول','صح ولا غلط: كنبغي الحلويات أكثر منك']],
+['fill','✍️','كمل الجملة',['كمل: أحسن حاجة فينا هي…','كمل: كنحس بالأمان ملي…','كمل: نهار مثالي معاك هو…']],
+['most','🏆','شكون أكثر…؟',['شكون أكثر واحد كيتأخر؟ (أنا ولا نتا)','شكون أكثر واحد كيغير؟','شكون أكثر واحد كيضحك بزاف؟']],
+['story','📚','حكاية بجوج',['بدا الحكاية: كان يا مكان، جوج كيتلاقاو فأكادير…','كمل الحكاية: فنهار شمسي مشاو للبحر ولقاو…','كمل: ملي دخلو للبلاصة السرية لقاو…']],
+['draw','🎨','رسمني',['وصف ليا بالكلمات الدار اللي بغينا نسكنوها','وصف ليا الخرجة المثالية ديالنا','وصف ليا وجه حلمك فعشر كلمات']],
+['quiz','📅','كويز تواريخنا',['شنو تاريخ أول هضرة بينا؟','شنو كان أول نهار شفنا فيه بعضنا؟','شحال من نهار دازو من أول هضرة؟ خمن بلا ما تحسب']],
+['photo','📷','تحدي الصورة',['صور حاجة حمرا قدامك وصيفطها فلحظة، وكتب شنو صورتي','صور حاجة كتفكرك فينا وصيفطها فلحظة','صور السما دابا وصيفطها فلحظة']],
+['mime','🎭','التمثيل الصامت',['مثل بلا كلام: كتصبن الصحون… وكتب شنو مثلتي','مثل: كتسنى الطوبيس','مثل: كتبكي على فيلم']],
+['taboo','🚫','الكلمة الممنوعة',['وصف «البحر» بلا ما تقول: ماء، أزرق، سباحة','وصف «القهوة» بلا ما تقول: كحل، صباح، كاس','وصف «الحب» بلا ما تقول: قلب، بغيتك، كنبغيك']],
+['lie','🤥','جوج حقايق وكذبة',['كتب جوج حقايق وكذبة على الطفولة ديالك','عاود على القراية ولا الخدمة','عاود على السفر والمغامرات']],
+['future','🔮','مستقبلنا',['فين غنكونو من هنا 5 سنين؟','شنو أول حاجة غنديرو بجوج؟','كيفاش غتكون الدار ديالنا؟']],
+['would','🎯','شكون غيدير…؟',['شكون غيدير مفاجأة للآخر أول؟','شكون غيبكي فالفيلم؟','شكون غينسى الموعد؟']],
+['box','📦','صندوق الأسئلة',['سول الآخر سؤال عمرك ما سولتيه','سول سؤال على الطفولة','سول سؤال على الأحلام']],
+['mood','😶','خمن مزاجي',['خمن شنو مزاجي دابا وكتب علاش','كتب مزاجك دابا بإيموجي وشرح','خمن شنو غنقول إلا تقلقت']],
+['word','💬','كلمة النهار',['كلمة النهار: «أمان». شنو كتعني ليك؟','كلمة النهار: «بيت». شنو كتعني ليك؟','كلمة النهار: «ضحكة». شنو كتعني ليك؟']],
+['hunt','🗝️','البحث عن الذكريات',['شنو أول ذكرى فخاطرك بيناتنا؟','شنو أحسن ضحكة ضحكناها بجوج؟','شنو أغرب موقف وقع لينا؟']]];
+let gcur=null;const GI={};
+async function gamePage(){
+  const box=h('div'),back=h('button',{class:'ghost',onclick:()=>{gcur=null;render()}},'↩ رجع للألعاب');
+  if(gcur==='song'){box.append(back,await songPage());return box}
+  const g=G.find(x=>x[0]===gcur);
+  if(!g){
+    box.append(h('h1',{},'ألعابنا 🎲'),h('p',{class:'sub'},'ختار لعبة وجاوبو بجوج'));
+    const gr=h('div',{class:'grid'});
+    [['song','🎵','أغنية النهار']].concat(G.map(x=>[x[0],x[1],x[2]])).forEach(([id,i,t])=>gr.append(h('button',{type:'button',class:'ghost',style:'border-radius:22px;padding:14px 6px;font-size:15px',onclick:()=>{gcur=id;render()}},h('div',{style:'font-size:30px'},i),t)));
+    box.append(gr);return box;
+  }
+  const P=g[3],idx=GI[g[0]]!==undefined?GI[g[0]]:(todayN()-1)%P.length,rk=String(idx);
+  box.append(back,h('h1',{},g[1]+' '+g[2]),h('p',{class:'sub'},'السؤال '+(idx+1)+' من '+P.length));
+  const {data,error}=await sb.from('game_answers').select('*').eq('space_id',SPACE).eq('game',g[0]).eq('round',rk);
+  if(error){box.append(h('div',{class:'card'},h('div',{class:'err'},'خاصك تدير SQL ديال الألعاب: '+error.message)));return box}
+  const mine=(data||[]).find(r=>r.author_id===me.id),other=(data||[]).find(r=>r.author_id!==me.id);
+  box.append(h('div',{class:'card sun'},h('b',{},P[idx])));
+  const ta=h('textarea',{placeholder:'جاوب هنا…',style:'min-height:90px'});ta.value=mine?mine.answer||'':'';
+  const st=h('span',{class:'st'}),b=h('button',{type:'button'},'حفظ الجواب 💾');
+  b.onclick=async()=>{
+    const r=await sb.from('game_answers').upsert({space_id:SPACE,game:g[0],round:rk,author_id:me.id,answer:ta.value},{onConflict:'space_id,game,round,author_id'});
+    if(r.error)st.textContent='ما تحفظش: '+r.error.message;else render();
+  };
+  box.append(h('div',{class:'card'},h('b',{class:'t'},'أنا 💗'),ta,h('div',{class:'row'},b,st)));
+  const oc=!other?'مزال ما جاوب… 🥺💗':!mine?'جاوب، خاصك تجاوب نتا حتى ترى جوابو 🔒':(other.answer||'…');
+  box.append(h('div',{class:'card sun'},h('b',{class:'t'},nm()+' 💌'),h('div',{style:'white-space:pre-wrap'},oc)));
+  box.append(h('div',{class:'row',style:'justify-content:center'},h('button',{type:'button',class:'ghost',onclick:()=>{GI[g[0]]=(idx+1)%P.length;render()}},'السؤال التالي ➡️'),h('button',{type:'button',class:'ghost',onclick:()=>openMsgs()},'💬 الشات')));
+  return box;
+}
+let dsub='q',acat='fav';
+async function dreamsPage(){
+  const box=h('div'),seg=h('div',{class:'row',style:'justify-content:center;margin:0 0 6px'});
+  [['q','✨ سؤال النهار'],['n','🌠 أحلام وأهداف'],['r','📖 روايتنا'],['a','📍 بلايصنا']].forEach(([k,t])=>seg.append(h('button',{class:dsub===k?'':'ghost',onclick:()=>{dsub=k;render()}},t)));
+  box.append(seg,dsub==='q'?await questionPage():dsub==='n'?await notesPage():dsub==='r'?await romanPage():await agadirPage());
+  return box;
+}
+async function romanPage(){
+  const box=h('div',{},h('h1',{},'روايتنا 📖'),h('p',{class:'sub'},'كل واحد يكتب فصل والآخر يكمل'));
+  const {data,error}=await sb.from('roman_chapitres').select('*').eq('space_id',SPACE).order('created_at',{ascending:true});
+  if(error){box.append(h('div',{class:'card'},h('div',{class:'err'},'خاصك تدير SQL ديال الرواية: '+error.message)));return box}
+  (data||[]).forEach((r,i)=>{
+    const c=h('div',{class:'card'},h('b',{class:'t'},'الفصل '+(i+1)+(r.title?' · '+r.title:'')+' — '+(r.author_id===me.id?'أنا':nm())),h('div',{class:'st'},fmtD(r.created_at)),h('div',{style:'white-space:pre-wrap;margin-top:6px'},r.content));
+    if(r.author_id===me.id)c.append(h('div',{class:'row'},h('button',{class:'ghost mini',onclick:async()=>{if(confirm('تمسح هاد الفصل؟')){await sb.from('roman_chapitres').delete().eq('id',r.id);render()}}},'🗑')));
+    box.append(c);
+  });
+  if(!(data||[]).length)box.append(h('div',{class:'card'},'مزال ما بدات الرواية. كتب الفصل الأول ✨'));
+  const ti=h('input',{type:'text',placeholder:'عنوان الفصل (اختياري)'}),ta=h('textarea',{placeholder:'كتب الفصل…',style:'min-height:120px'}),er=h('div',{class:'err'});
+  box.append(h('div',{class:'card sun'},ti,h('div',{style:'height:8px'}),ta,h('div',{class:'row'},h('button',{onclick:async()=>{
+    if(!ta.value.trim()){er.textContent='كتب الفصل';return}
+    const r=await sb.from('roman_chapitres').insert({space_id:SPACE,title:ti.value.trim()||null,content:ta.value.trim(),author_id:me.id});
+    if(r.error)er.textContent='ما تحفظش: '+r.error.message;else render();
+  }},'زيد الفصل 📖')),er));
+  return box;
+}
+const ACAT=[['fav','💗 المفضلة'],['want','✈️ بغينا نمشيو'],['mem','😂 ذكرياتنا']];
+async function agadirPage(){
+  const box=h('div',{},h('h1',{},'بلايصنا فأكادير 📍'),h('p',{class:'sub'},'الأماكن اللي كنبغيوها ونبغيو نمشيو ليها'));
+  const chips=h('div',{class:'row',style:'justify-content:center'});
+  ACAT.forEach(([k,t])=>chips.append(h('button',{class:acat===k?'mini':'ghost mini',onclick:()=>{acat=k;render()}},t)));box.append(chips);
+  const {data,error}=await sb.from('agadir_places').select('*').eq('space_id',SPACE).eq('category',acat).order('created_at',{ascending:false});
+  if(error){box.append(h('div',{class:'card'},h('div',{class:'err'},'خاصك تدير SQL ديال البلايص: '+error.message)));return box}
+  (data||[]).forEach(r=>{
+    const c=h('div',{class:'card'},h('b',{class:'t'},'📍 '+r.name),h('div',{class:'st'},(r.author_id===me.id?'أنا':nm())+' · '+fmtD(r.created_at)));
+    if(r.description)c.append(h('div',{style:'white-space:pre-wrap;margin-top:6px'},r.description));
+    if(r.photo_path){const im=h('img',{class:'pic'});signed(r.photo_path).then(u=>{im.src=u;im.onclick=()=>lightbox(u)});c.append(im)}
+    if(r.author_id===me.id)c.append(h('div',{class:'row'},h('button',{class:'ghost mini',onclick:async()=>{if(!confirm('تمسح هاد البلاصة؟'))return;if(r.photo_path)await sb.storage.from(BUCKET).remove([r.photo_path]);await sb.from('agadir_places').delete().eq('id',r.id);render()}},'🗑')));
+    box.append(c);
+  });
+  if(!(data||[]).length)box.append(h('div',{class:'card'},'مزال ما كاين والو هنا ✨'));
+  const ni=h('input',{type:'text',placeholder:'سمية البلاصة'}),de=h('textarea',{placeholder:'الحكاية / علاش كنبغيوها',style:'min-height:70px'}),
+    cs=h('select',{});ACAT.forEach(([k,t])=>{const o=h('option',{value:k},t);if(k===acat)o.selected=true;cs.append(o)});
+  const pf=h('input',{type:'file',accept:'image/*',style:'display:none'}),pn=h('span',{class:'st'}),er=h('div',{class:'err'});
+  pf.onchange=()=>{pn.textContent=pf.files[0]?'✅ '+pf.files[0].name:''};
+  const b=h('button',{type:'button'},'زيد البلاصة 📍');
+  b.onclick=async()=>{
+    er.textContent='';if(!ni.value.trim()){er.textContent='كتب سمية البلاصة';return}
+    b.disabled=true;let path=null;
+    try{
+      const f=pf.files[0];
+      if(f){const sm=await shrink(f),isJ=sm!==f;path=SPACE+'/photos/'+me.id+'/place-'+Date.now()+'.'+(isJ?'jpg':((f.name.split('.').pop()||'jpg').toLowerCase()));const u=await sb.storage.from(BUCKET).upload(path,sm,{contentType:isJ?'image/jpeg':f.type});if(u.error)throw u.error}
+      const r=await sb.from('agadir_places').insert({space_id:SPACE,name:ni.value.trim(),description:de.value.trim()||null,category:cs.value,photo_path:path,author_id:me.id});
+      if(r.error){if(path)await sb.storage.from(BUCKET).remove([path]);throw r.error}
+      acat=cs.value;render();
+    }catch(e){er.textContent='ما تحفظاتش: '+(e.message||e);b.disabled=false}
+  };
+  box.append(h('div',{class:'card sun'},h('b',{class:'t'},'زيد بلاصة'),ni,h('div',{style:'height:8px'}),de,h('div',{class:'row'},cs),h('div',{class:'row'},h('button',{type:'button',class:'ghost',onclick:()=>pf.click()},'📷 صورة (اختياري)'),pf,pn),h('div',{class:'row'},b),er));
+  return box;
+}
+
+/* ===== v3.6-c7: تقريرنا 📊 ===== */
+const cntQ=async q=>{try{const r=await q;return r.error?'—':(r.count||0)}catch(e){return '—'}};
+async function reportPage(){
+  const box=h('div');
+  box.append(h('button',{class:'ghost',onclick:()=>go('today')},'↩ رجع'),h('h1',{},'تقريرنا 📊'),h('p',{class:'sub'},'من أول هضرة بينا 💞'));
+  const ph=()=>sb.from('photos').select('*',{count:'exact',head:true}).eq('space_id',SPACE);
+  const nt=k=>sb.from('our_notes').select('*',{count:'exact',head:true}).eq('space_id',SPACE).eq('kind',k);
+  const [mo,pc,qa,dr,gl]=await Promise.all([
+    cntQ(ph().like('path','%/inst-%')),cntQ(ph().not('path','like','%/inst-%')),
+    cntQ(sb.from('question_answers').select('*',{count:'exact',head:true}).eq('space_id',SPACE)),
+    cntQ(nt('dream')),cntQ(nt('goal'))]);
+  let sl='—';
+  try{const r=await sb.from('secret_letters').select('created_by,unlock_at').eq('space_id',SPACE);if(!r.error)sl=(r.data||[]).filter(x=>x.created_by===me.id||new Date(x.unlock_at)<=Date.now()).length}catch(e){}
+  const row=(t,v)=>h('div',{class:'card cd'},h('span',{},t),h('span',{class:'rpn'},String(v)));
+  box.append(row('💞 أيام بجوج',todayN()),row('⚡ لحظات',mo),row('📸 تصاور',pc),row('🎲 أسئلة النهار اللي جاوبنا',qa),row('💌 رسائل سرية',sl),row('🌠 أحلام',dr),row('🎯 أهداف',gl));
+  try{
+    const rx=await loadReacts();
+    const {data}=await sb.from('photos').select('*').eq('space_id',SPACE).like('path','%/inst-%');
+    let best=null,bn=0;
+    (data||[]).forEach(p=>{const n=(rx.get(p.id)||[]).filter(r=>r.heart).length;if(n>bn){bn=n;best=p}});
+    if(best){
+      const u=await signed(best.path),im=h('img',{class:'pic',src:u,onclick:()=>lightbox(u)});
+      box.append(h('div',{class:'card sun'},h('b',{class:'t'},'😂 أحسن لحظة: '+bn+' ❤️'),im,best.caption?h('div',{class:'cp',style:'margin-top:6px'},best.caption):'',h('div',{class:'st'},fmtD(best.created_at))));
+    }else box.append(h('div',{class:'card sun'},'😂 مزال ما كاينة حتى لحظة فيها ❤️. ضغط على 🤍 تحت أي لحظة.'));
+  }catch(e){}
+  return box;
+}
+
+/* ===== v3.6-c7: رسالة سرية: بطاقة المفاجأة ===== */
+let LQ=null;const letterLater=new Set();
+async function letterPrompt(){
+  try{
+    if(!me||!sb||DECOY||LQ)return;
+    const {data,error}=await sb.from('secret_letters').select('*').eq('space_id',SPACE).neq('created_by',me.id).lte('unlock_at',new Date().toISOString()).order('unlock_at',{ascending:true});
+    if(error||!data)return;
+    const key=x=>'kls_'+me.id+'_'+x.id;
+    const r=data.find(x=>!letterLater.has(x.id)&&!localStorage.getItem(key(x)));
+    if(!r)return;
+    const when=fmtD(r.created_at||r.unlock_at),body=h('div'),close=()=>{if(LQ){LQ.remove();LQ=null}};
+    const reveal=()=>body.replaceChildren(
+      h('div',{class:'st'},'✍️ كتبها '+nm()+' نهار '+when),
+      h('div',{style:'white-space:pre-wrap;margin:14px 0;text-align:right'},r.content),
+      h('button',{onclick:()=>{close();letterPrompt()}},'تم 💗'));
+    body.append(h('div',{style:'font-size:44px'},'💌'),
+      h('p',{},'هادي رسالة كتبها '+nm()+' نهار '+when+'. بغيتي تحلها؟'),
+      h('div',{class:'row',style:'justify-content:center'},
+        h('button',{onclick:()=>{try{localStorage.setItem(key(r),'1')}catch(e){}reveal()}},'اه، حلها ❤️'),
+        h('button',{class:'ghost',onclick:()=>{letterLater.add(r.id);close()}},'من بعد')));
+    LQ=h('div',{class:'lq'},h('div',{class:'card'},body));
+    document.body.append(LQ);
+  }catch(e){}
+}
+
+/* ===== v3.6-c10: توحشتك ❤️ ===== */
+function missCard(){
+  const msg=h('div',{class:'st',style:'text-align:center;margin-top:6px'});
+  const b=h('button',{type:'button',style:'width:100%;font-size:22px;padding:16px'},'توحشتك ❤️');
+  b.onclick=async()=>{
+    let last=0;try{last=+localStorage.getItem('kmiss')||0}catch(e){}
+    if(Date.now()-last<20000){msg.textContent='تسنى شوية 💗';return}
+    b.disabled=true;
+    const r=await sb.from('miss_you').insert({space_id:SPACE});
+    b.disabled=false;
+    if(r.error){msg.textContent='ما تصيفطاتش: '+r.error.message;return}
+    try{localStorage.setItem('kmiss',String(Date.now()))}catch(e){}
+    msg.textContent='وصل ❤️';buzz(30);
+  };
+  return h('div',{class:'card'},b,msg);
+}
+let MQ=null;
+async function missCheck(){
+  try{
+    if(!me||!sb||DECOY||MQ||!$('#pin').hidden||!$('#app').classList.contains('on'))return;
+    const {data,error}=await sb.from('miss_you').select('id').eq('space_id',SPACE).neq('author_id',me.id).is('seen_at',null).limit(1);
+    if(error||!data||!data.length)return;
+    const done=async()=>{await sb.from('miss_you').update({seen_at:new Date().toISOString()}).eq('space_id',SPACE).neq('author_id',me.id).is('seen_at',null);if(MQ){MQ.remove();MQ=null}};
+    MQ=h('div',{class:'lq'},h('div',{class:'card'},
+      h('div',{style:'font-size:90px;animation:pop .9s ease infinite alternate'},'❤️'),
+      h('p',{style:'font-size:20px;font-weight:700'},'واحد كيفكر فيك ❤️'),
+      h('div',{class:'row',style:'justify-content:center'},
+        h('button',{onclick:async()=>{await sb.from('miss_you').insert({space_id:SPACE});await done()}},'أنا بحالك ❤️'),
+        h('button',{class:'ghost',onclick:done},'سد'))));
+    document.body.append(MQ);buzz([80,60,80]);
+  }catch(e){}
+}
+
+async function dayPage(n,back){
+  const day=iso(dayDate(n)),box=h('div');
+  const {data,error}=await sb.from('day_entries').select('*').eq('space_id',SPACE).eq('day',day);
+  if(error)throw error;
+  const rows=data||[];
+  const mine=Object.assign({content:'',audio_path:null,photo_path:null,starred:false},rows.find(r=>r.author_id===me.id)||{});
+  const other=rows.find(r=>r.author_id!==me.id);
+  const {data:spd}=await sb.from('special_days').select('*').eq('space_id',SPACE).eq('day',day);
+  let special=(spd&&spd[0])||null;
+  if(back)box.append(h('button',{class:'ghost',onclick:()=>go('days')},'↩ رجع للأيام'));
+  box.append(h('h1',{},'النهار '+n+' 🌷'),h('p',{class:'sub'},fmt(dayDate(n))+(back?'':' · اليوم')));
+  let cc=null,mo=null;if(!back){const db=await datesBanner();if(db)box.append(db);cc=await cdCard();mo=await momentCard()}
+  const mc=await moodCard(day);if(back&&mc)box.append(mc)
+  if(back){
+    const {data:cs}=await sb.from('chat_snippets').select('content').eq('space_id',SPACE).eq('day',day).order('line_no');
+    if(cs&&cs.length)box.append(h('div',{class:'card sun'},h('b',{class:'t'},'📜 من الشات ديالنا'),...cs.map(r=>h('div',{style:'white-space:pre-wrap;margin:4px 0'},r.content))));
+  }
+
+  const st=h('span',{class:'st'},'');
+  async function save(){
+    st.textContent='كنحفظ…';
+    const {error}=await sb.from('day_entries').upsert({space_id:SPACE,day,author_id:me.id,content:mine.content,audio_path:mine.audio_path,photo_path:mine.photo_path,starred:mine.starred,updated_at:new Date().toISOString()},{onConflict:'space_id,day,author_id'});
+    st.textContent=error?'ما تحفظاتش: '+error.message:'تحفظات ✓';
+  }
+  const ta=h('textarea',{placeholder:'كتب هنا…'});ta.value=mine.content||'';
+  let tm;ta.oninput=()=>{mine.content=ta.value;st.textContent='…';clearTimeout(tm);tm=setTimeout(save,800)};
+  const starB=h('button',{class:'ghost'},mine.starred?'⭐ محفوظ':'☆ زوين');
+  starB.onclick=async()=>{mine.starred=!mine.starred;starB.textContent=mine.starred?'⭐ محفوظ':'☆ زوين';await save()};
+  const msg=h('div',{class:'err'});
+  const player=h('div');
+  const setAudio=p=>{player.replaceChildren();if(!p)return;player.append(audioEl(p),h('button',{class:'ghost',style:'margin-top:6px',onclick:delAudio},'🗑 مسح الأوديو'))};
+  async function delAudio(){
+    if(!confirm('تمسح هاد الأوديو؟'))return;
+    const old=mine.audio_path;mine.audio_path=null;setAudio(null);await save();
+    const r=await sb.storage.from(BUCKET).remove([old]);
+    if(r.error||!(r.data&&r.data.length))msg.textContent='تحيد من الصفحة، ولكن الملف بقا فالتخزين.';
+  }
+  setAudio(mine.audio_path);
+  const rb=h('button',{},'سجّل أوديو 🎙️');let rec,chunks;
+  rb.onclick=async()=>{
+    msg.textContent='';
+    if(rec&&rec.state==='recording'){rec.stop();return}
+    try{
+      const s=await navigator.mediaDevices.getUserMedia({audio:true});chunks=[];rec=new MediaRecorder(s);
+      rec.ondataavailable=e=>chunks.push(e.data);
+      rec.onstop=async()=>{
+        s.getTracks().forEach(t=>t.stop());rb.textContent='سجّل أوديو 🎙️';
+        const type=rec.mimeType||'audio/webm',ext=type.includes('mp4')?'m4a':'webm';
+        const path=SPACE+'/audio/'+me.id+'/'+day+'-'+Date.now()+'.'+ext;
+        st.textContent='كنرفع الأوديو…';
+        const {error}=await sb.storage.from(BUCKET).upload(path,new Blob(chunks,{type}),{contentType:type});
+        if(error){st.textContent='';msg.textContent='ما تحمّلش الأوديو: '+error.message;return}
+        const old=mine.audio_path;mine.audio_path=path;setAudio(path);await save();
+        if(old)sb.storage.from(BUCKET).remove([old]);
+      };
+      rec.start();rb.textContent='⏹ وقف';
+    }catch(e){msg.textContent='خاصك تسمح للميكرو 🎙️'}
+  };
+  const pBox=h('div'),pm=h('div',{class:'err'});
+  const setPhoto=p=>{pBox.replaceChildren();if(!p)return;const img=h('img',{class:'pic'});signed(p).then(u=>img.src=u);pBox.append(img,h('button',{class:'ghost',style:'margin-top:6px',onclick:delPhoto},'🗑 مسح الصورة'))};
+  async function delPhoto(){
+    if(!confirm('تمسح هاد الصورة؟'))return;
+    const old=mine.photo_path;mine.photo_path=null;setPhoto(null);await save();
+    const r=await sb.storage.from(BUCKET).remove([old]);
+    if(r.error||!(r.data&&r.data.length))pm.textContent='تحيدات من الصفحة، ولكن الملف بقا فالتخزين.';
+  }
+  setPhoto(mine.photo_path);
+  const pf=h('input',{type:'file',accept:'image/*',style:'display:none'});
+  pf.onchange=async()=>{
+    const file=pf.files[0];if(!file)return;pm.textContent='كنرفع الصورة…';
+    const small=await shrink(file),isJ=small!==file;
+    const path=SPACE+'/photos/'+me.id+'/'+day+'-'+Date.now()+'.'+(isJ?'jpg':((file.name.split('.').pop()||'jpg').toLowerCase()));
+    const u=await sb.storage.from(BUCKET).upload(path,small,{contentType:isJ?'image/jpeg':file.type});
+    if(u.error){pm.textContent='ما تحمّلاتش: '+u.error.message;return}
+    const old=mine.photo_path;mine.photo_path=path;setPhoto(path);await save();pm.textContent='';
+    if(old)sb.storage.from(BUCKET).remove([old]);
+    pf.value='';
+  };
+  const spB=h('button',{class:'ghost'});
+  const paintSp=()=>{spB.textContent=special?'💎 ذكرى خاصة'+(special.title?': '+special.title:''):'◇ علّم هاد النهار ذكرى خاصة'};
+  paintSp();
+  spB.onclick=async()=>{
+    msg.textContent='';
+    if(special){
+      if(special.created_by!==me.id){msg.textContent='الطرف الآخر هو لي علّمها.';return}
+      if(!confirm('تحيد العلامة؟'))return;
+      const r=await sb.from('special_days').delete().eq('id',special.id);
+      if(r.error){msg.textContent=r.error.message;return}
+      special=null;paintSp();return;
+    }
+    const t=prompt('شنو وقع فهاد النهار؟ (عنوان قصير)');if(t===null)return;
+    const r=await sb.from('special_days').insert({space_id:SPACE,day,title:t.trim(),created_by:me.id}).select().single();
+    if(r.error){msg.textContent='ما تحفظاتش: '+r.error.message;return}
+    special=r.data;paintSp();
+  };
+  box.append(h('div',{class:'card'},h('b',{class:'t'},'أنا 💗'),ta,player,h('div',{class:'row'},rb,starB,st,...(back?[]:thinkBtn()),),msg));
+  box.append(h('div',{class:'card'},h('b',{class:'t'},'📸 صورة النهار'),pBox,h('div',{class:'row'},h('button',{onclick:()=>pf.click()},'صورة النهار 📷'),pf),pm,h('div',{class:'row'},spB)));
+
+  if(other){
+    const c=h('div',{class:'card sun'},h('b',{class:'t'},nm()+' 💌'+(other.starred?' ⭐':'')),h('div',{style:'white-space:pre-wrap'},other.content||'…'));
+    if(other.audio_path)c.append(audioEl(other.audio_path));
+    if(other.photo_path){const im=h('img',{class:'pic'});signed(other.photo_path).then(u=>im.src=u);c.append(im)}
+    box.append(c);
+  }else box.append(h('div',{class:'card sun'},'📜 الطرف الآخر مزال ما كتب فهاد النهار.'));
+  if(!back){if(mc)box.append(mc);if(mo)box.append(mo);if(cc)box.append(cc);const ot=await onThisDay();if(ot)box.append(ot);box.append(missCard(),helpCard())}
+  return box;
+}
+
+async function daysPage(){
+  const {data,error}=await sb.from('day_entries').select('day,content,audio_path,photo_path').eq('space_id',SPACE);
+  if(error)throw error;
+  const has=new Set((data||[]).filter(r=>(r.content&&r.content.trim())||r.audio_path||r.photo_path).map(r=>r.day));
+  const {data:sdd}=await sb.from('special_days').select('day').eq('space_id',SPACE);
+  const spec=new Set((sdd||[]).map(r=>r.day));
+  const {data:cd}=await sb.from('chat_snippets').select('day');
+  (cd||[]).forEach(r=>has.add(r.day));
+  const box=h('div',{},h('h1',{},'الأيام 📅'),h('p',{class:'sub'},'كل نهار دارو بجوج 💕'));
+  const t=todayN();
+  box.append(h('button',{onclick:()=>go('dates'),style:'width:100%;margin-bottom:8px'},'💞 تواريخنا المهمة'));
+  box.append(h('button',{class:'ghost',onclick:()=>{const e=$('.item.today');if(e)e.scrollIntoView({behavior:'smooth',block:'center'})}},'↓ نمشي لليوم'));
+  for(let n=1;n<=t;n++){
+    const d=dayDate(n),full=has.has(iso(d));
+    box.append(h('div',{class:'card item'+(n===t?' today':''),onclick:()=>go('days',n)},
+      h('div',{class:'dot'},String(n)),
+      h('div',{},h('b',{},'النهار '+n),h('div',{class:'d'},fmt(d))),
+      h('div',{style:'margin-inline-start:auto'},(spec.has(iso(d))?'💎 ':'')+(n===t?'اليوم':(full?'📜':'خاوي')))));
+  }
+  box.append(h('div',{class:'row',style:'justify-content:center;margin-top:18px'},h('button',{class:'ghost',onclick:importFile},'📥 استيراد ملف الشات')));
+  return box;
+}
+
+async function zwinKalam(){
+  const {data,error}=await sb.from('day_entries').select('*').eq('space_id',SPACE).eq('starred',true).order('day',{ascending:false});
+  if(error)throw error;
+  const box=h('div',{},h('h1',{},'كلام زوين 💌'),h('p',{class:'sub'},'اللي يعجبو يبقى محفوظ 🔒'));
+  if(!data.length)box.append(h('div',{class:'card'},'ما كاين والو بعد. ضغط على ⭐ فأي كتابة ولا أوديو باش يبان هنا.'));
+  data.forEach(r=>{
+    const n=Math.round((new Date(r.day+'T12:00:00')-START)/864e5)+1;
+    const c=h('div',{class:'card'},h('b',{class:'t'},'النهار '+n+(r.author_id===me.id?' · أنا':' · '+nm())),h('div',{style:'white-space:pre-wrap'},r.content||''));
+    if(r.audio_path)c.append(audioEl(r.audio_path));
+    box.append(c);
+  });
+  const {data:sd}=await sb.from('special_days').select('*').eq('space_id',SPACE).order('day',{ascending:false});
+  if(sd&&sd.length){
+    box.append(h('h2',{style:'margin-top:20px'},'💎 ذكريات خاصة'));
+    sd.forEach(r=>{
+      const n=Math.round((new Date(r.day+'T12:00:00')-START)/864e5)+1;
+      box.append(h('div',{class:'card item',onclick:()=>go('days',n)},h('div',{class:'dot'},String(n)),h('div',{},h('b',{},r.title||'ذكرى خاصة'),h('div',{class:'d'},fmt(new Date(r.day+'T12:00:00'))))));
+    });
+  }
+  return box;
+}
+let zsub='k';
+async function zwinPage(){
+  const box=h('div'),seg=h('div',{class:'row',style:'justify-content:center;margin:0 0 6px'});
+  [['k','💌 كلام زوين'],['p','📸 تصاورنا'],['l','🔒 رسائل سرية']].forEach(([k,t])=>seg.append(h('button',{class:zsub===k?'':'ghost',onclick:()=>{zsub=k;render()}},t)));
+  box.append(seg);
+  if(zsub==='p')box.append(await picsPage());
+  else if(zsub==='l'){const lb=await lettersBox();box.append(lb||h('div',{class:'card'},'ما تحملاتش الرسائل السرية'))}
+  else box.append(await zwinKalam());
+  return box;
+}
+
+async function picsPage(){
+  const rx=await loadReacts();
+  let data=[],error=null;
+  if(picsFav){
+    const ids=[...rx.entries()].filter(([k,v])=>v.some(r=>r.heart)).map(([k])=>k);
+    if(ids.length){({data,error}=await sb.from('photos').select('*').eq('space_id',SPACE).in('id',ids).order('created_at',{ascending:false}))}
+  }else{
+    ({data,error}=await sb.from('photos').select('*').eq('space_id',SPACE).not('path','like','%/inst-%').order('created_at',{ascending:false}));
+  }
+  if(error)throw error;
+  data=data||[];
+  const box=h('div',{},h('h1',{},'تصاور 📸'),h('p',{class:'sub'},'لحظاتنا'));
+  const seg=h('div',{class:'row',style:'justify-content:center'});
+  [[false,'📸 الكل'],[true,'❤️ المفضلة']].forEach(([k,t])=>seg.append(h('button',{class:picsFav===k?'':'ghost',onclick:()=>{picsFav=k;render()}},t)));
+  box.append(seg);
+  const f=h('input',{type:'file',accept:'image/*',multiple:'',style:'display:none'});
+  const msg=h('div',{class:'err'});
+  f.onchange=async()=>{
+    let i=0;
+    for(const file of f.files){
+      msg.textContent='كنرفع '+(++i)+'/'+f.files.length+'…';
+      const small=await shrink(file),isJ=small!==file;
+      const ext=isJ?'jpg':(file.name.split('.').pop()||'jpg').toLowerCase();
+      const path=SPACE+'/photos/'+me.id+'/'+Date.now()+'-'+i+'.'+ext;
+      const u=await sb.storage.from(BUCKET).upload(path,small,{contentType:isJ?'image/jpeg':file.type});
+      if(u.error){msg.textContent='ما تحمّلاتش: '+u.error.message;return}
+      const r=await sb.from('photos').insert({space_id:SPACE,path});
+      if(r.error){msg.textContent='ما تسجّلاتش: '+r.error.message;return}
+    }
+    render();
+  };
+  box.append(h('div',{class:'row'},h('button',{onclick:()=>f.click()},'زيد صورة 📷'),f),msg);
+  if(!data.length){box.append(h('div',{class:'card'},picsFav?'ما كاين حتى صورة مفضلة بعد. ضغط على 🤍 تحت أي صورة ✨':'ما كاين حتى صورة. زيد أول لحظة ✨'));return box}
+  const {data:urls}=await sb.storage.from(BUCKET).createSignedUrls(data.map(p=>p.path),3600);
+  const g=h('div',{class:'grid'});
+  data.forEach((p,i)=>{
+    const src=(urls&&urls[i]&&urls[i].signedUrl)||'';
+    const d=h('div',{},h('img',{src,loading:'lazy',onclick:()=>lightbox(src)}));
+    {const ctl=reactCtl(p,rx.get(p.id)||[]);ctl.b.classList.add('hrt');d.append(ctl.b)}
+    if(p.author_id===me.id)d.append(h('button',{class:'x',onclick:async()=>{
+      if(!confirm('تمسح هاد الصورة؟'))return;
+      await sb.storage.from(BUCKET).remove([p.path]);
+      await sb.from('photos').delete().eq('id',p.id);render();
+    }},'🗑'));
+    g.append(d);
+  });
+  box.append(g);return box;
+}
+
+/* ===== لحظة ⚡ : كاميرا مباشرة + تعليق + إرسال ===== */
+let camStream=null;
+function stopCam(){if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null}}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stopCam();else if(tab==='inst'&&me&&$('#pin').hidden)render()});
+async function instPage(){
+  const {data,error}=await sb.from('photos').select('*').eq('space_id',SPACE).like('path','%/inst-%').order('created_at',{ascending:false}).limit(30);
+  if(error)throw error;
+  markInstSeen(data);
+  const box=h('div',{},h('h1',{},'لحظة ⚡'),h('p',{class:'sub'},'صوِّر وأرسِل في الوقت نفسه، وستبقى اللحظة محفوظة هنا'));
+  const msg=h('div',{class:'err'});
+  let facing='user',blob=null,sending=false;
+  const video=h('video',{autoplay:'',playsinline:''});video.muted=true;
+  const img=h('img',{alt:''});img.hidden=true;
+  const cam=h('div',{class:'cam'},video,img);
+  const shutB=h('button',{type:'button',class:'shut','aria-label':'صور'});
+  const flipB=h('button',{type:'button',class:'rnd ghost','aria-label':'بدل الكاميرا'},'🔄');
+  const camRow=h('div',{class:'camrow'},flipB,shutB);
+  const fi=h('input',{type:'file',accept:'image/*',capture:'environment',style:'display:none'});
+  const fb=h('button',{type:'button',class:'ghost'},'📷 حل كاميرا الهاتف');fb.hidden=true;
+  const cap=h('input',{type:'text',maxlength:'140',placeholder:'أضف وصفًا تحت الصورة…'});
+  const redo=h('button',{type:'button',class:'ghost'},'أعد 🔁');
+  const send=h('button',{type:'button'},'أرسل ⚡');
+  const prevRow=h('div',{class:'row'},redo,send);
+  const prev=h('div',{},cap,prevRow);prev.hidden=true;
+  const showPrev=b=>{blob=b;img.src=URL.createObjectURL(b);img.hidden=false;video.hidden=true;camRow.hidden=true;fb.hidden=true;prev.hidden=false;stopCam();cap.focus()};
+  const showCam=()=>{blob=null;img.hidden=true;video.hidden=false;camRow.hidden=false;prev.hidden=true;cap.value='';msg.textContent='';startCam()};
+  async function startCam(){
+    stopCam();msg.textContent='';
+    try{
+      const st=await navigator.mediaDevices.getUserMedia({video:{facingMode:facing,width:{ideal:1280},height:{ideal:1280}},audio:false});
+      if(tab!=='inst'){st.getTracks().forEach(t=>t.stop());return}
+      camStream=st;video.srcObject=st;video.classList.toggle('mir',facing==='user');await video.play();
+    }catch(e){msg.textContent='الكاميرا ما تحلاتش (خاصك تقبل الإذن). تقدر تحل كاميرا الهاتف:';fb.hidden=false}
+  }
+  shutB.onclick=()=>{
+    if(!video.videoWidth)return;
+    const w=video.videoWidth,hh=video.videoHeight;let sw=w,sh=hh;
+    if(w/hh>.75)sw=hh*.75;else sh=w/.75;
+    const k=Math.min(1,1280/sh),c=document.createElement('canvas');c.width=Math.round(sw*k);c.height=Math.round(sh*k);
+    const x=c.getContext('2d');if(facing==='user'){x.translate(c.width,0);x.scale(-1,1)}
+    x.drawImage(video,(w-sw)/2,(hh-sh)/2,sw,sh,0,0,c.width,c.height);
+    buzz(15);c.toBlob(b=>{if(b)showPrev(b)},'image/jpeg',.85);
+  };
+  flipB.onclick=()=>{facing=facing==='user'?'environment':'user';startCam()};
+  fb.onclick=()=>fi.click();
+  fi.onchange=async()=>{const f=fi.files[0];if(!f)return;const sm=await shrink(f);showPrev(sm)};
+  redo.onclick=showCam;
+  send.onclick=async()=>{
+    if(!blob||sending)return;sending=true;send.disabled=true;redo.disabled=true;msg.textContent='جارٍ الإرسال…';
+    try{
+      const path=SPACE+'/photos/'+me.id+'/inst-'+Date.now()+'.jpg';
+      const u=await sb.storage.from(BUCKET).upload(path,blob,{contentType:blob.type||'image/jpeg'});
+      if(u.error)throw u.error;
+      const r=await sb.from('photos').insert({space_id:SPACE,path,caption:cap.value.trim()||null});
+      if(r.error){await sb.storage.from(BUCKET).remove([path]);throw r.error}
+      render();
+    }catch(e){msg.textContent='ما تصيفطاتش: '+(e.message||e);sending=false;send.disabled=false;redo.disabled=false}
+  };
+  {const frc=await fridayCard();if(frc)box.append(frc)}
+  box.append(cam,camRow,fb,fi,prev,msg);
+  if(data.length){
+    const {data:urls}=await sb.storage.from(BUCKET).createSignedUrls(data.map(p=>p.path),3600);
+    box.append(h('h2',{style:'margin:18px 0 0'},'اللحظات السابقة'));
+    let ifil='all',iq='';
+    const applyF=()=>cards.forEach(([c,p])=>{const ok=(ifil==='all'||(ifil==='me'?p.author_id===me.id:p.author_id!==me.id))&&(!iq||(p.caption||'').includes(iq));c.style.display=ok?'':'none'});
+    const fr=h('div',{class:'row',style:'justify-content:center'}),fb2=[];
+    [['all','الكل'],['me','أنا'],['ot',nm()]].forEach(([k,t])=>{const b=h('button',{type:'button',class:k==='all'?'mini':'ghost mini',onclick:()=>{ifil=k;fb2.forEach(([kk,bb])=>bb.className=kk===k?'mini':'ghost mini');applyF()}},t);fb2.push([k,b]);fr.append(b)});
+    const si=h('input',{type:'text',placeholder:'ابحث في الأوصاف…',style:'margin-top:8px'});si.oninput=()=>{iq=si.value.trim();applyF()};
+    box.append(fr,si);
+    const rx=await loadReacts();
+    let cmAll=[];const cards=[];
+    try{const rr=await sb.from('photo_comments').select('*').in('photo_id',data.map(p=>p.id)).order('created_at',{ascending:true});if(!rr.error)cmAll=rr.data||[]}catch(e){}
+    data.forEach((p,i)=>{
+      const src=(urls&&urls[i]&&urls[i].signedUrl)||'';
+      const c=h('div',{class:'ic'},h('img',{src,loading:'lazy',onclick:()=>lightbox(src)}));cards.push([c,p]);
+      if(p.caption)c.append(h('div',{class:'cp'},p.caption));
+      const d=new Date(p.created_at);
+      c.append(h('div',{class:'mt'},(p.author_id===me.id?'أنا':nm())+' · '+d.toLocaleDateString('ar-MA',{day:'numeric',month:'long'})+' · '+d.toLocaleTimeString('ar-MA',{hour:'2-digit',minute:'2-digit'})));
+      {
+        const ctl=reactCtl(p,rx.get(p.id)||[]);
+        const rcm=h('div',{class:'rc'});
+        const line=(mine,txt,id)=>{
+          const d=h('div',{class:'cm'},h('b',{},(mine?'أنا':nm())+' '),h('span',{},txt));
+          if(id&&mine)d.append(h('button',{type:'button',class:'cmx','aria-label':'حذف',onclick:async()=>{if(!confirm('هل تريد حذف هذا التعليق؟'))return;const r=await sb.from('photo_comments').delete().eq('id',id);if(r.error)alert('تعذّر الحذف: '+r.error.message);else d.remove()}},'✕'));
+          return d;
+        };
+        // التعاليق القديمة (من photo_reacts) كتبقى كأول تعليق
+        ctl.others.filter(r=>r.comment).forEach(r=>rcm.append(line(false,r.comment)));
+        if(ctl.st.comment)rcm.append(line(true,ctl.st.comment));
+        cmAll.filter(x=>x.photo_id===p.id).forEach(x=>rcm.append(line(x.author_id===me.id,x.content,x.id)));
+        const ci=h('input',{type:'text',maxlength:'300',placeholder:'اكتب تعليقًا…'});
+        const cb=h('button',{type:'button',class:'ghost mini','aria-label':'إرسال'},'➤');
+        const sendC=async()=>{
+          const v=ci.value.trim();if(!v)return;cb.disabled=true;
+          const r=await sb.from('photo_comments').insert({photo_id:p.id,content:v}).select().single();
+          cb.disabled=false;
+          if(r.error){alert('تعذّر إرسال التعليق: '+r.error.message);return}
+          rcm.append(line(true,v,r.data&&r.data.id));ci.value='';buzz(10);
+        };
+        cb.onclick=sendC;ci.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();sendC()}};
+        c.append(h('div',{class:'rx'},ctl.b,h('span',{class:'cmn'},'💬')),rcm,h('div',{class:'rin'},ci,cb));
+      }
+      if(p.author_id===me.id)c.append(h('button',{class:'x',onclick:async()=>{
+        if(!confirm('هل تريد حذف هذه اللحظة؟'))return;
+        await sb.storage.from(BUCKET).remove([p.path]);await sb.from('photos').delete().eq('id',p.id);render();
+      }},'🗑'));
+      box.append(c);
+    });
+  }
+  setTimeout(()=>{if(tab==='inst'&&!blob)startCam()},60);
+  return box;
+}
+
+/* ===== v3.6-c6: أغنية النهار 🎵 (رابط فقط، 0 Mo) ===== */
+let SGC=[];
+function songNorm(u){u=(u||'').trim();return /^https?:\/\//i.test(u)?u.replace(/^http:/i,'https:'):'https://'+u}
+function songInfo(u){
+  try{
+    const x=new URL(songNorm(u)),hn=x.hostname.replace(/^(www\.|m\.|music\.)/,'');
+    let id=null;
+    if(hn==='youtu.be')id=x.pathname.slice(1).split('/')[0];
+    else if(hn==='youtube.com'){
+      if(x.pathname==='/watch')id=x.searchParams.get('v');
+      else{const m=x.pathname.match(/^\/(shorts|embed|live)\/([\w-]{11})/);if(m)id=m[2]}
+    }
+    if(id&&/^[\w-]{11}$/.test(id))return {k:'yt',id};
+    if(hn==='open.spotify.com'){const m=x.pathname.match(/\/(track|album|playlist|episode)\/([A-Za-z0-9]{22})/);if(m)return {k:'sp',t:m[1],id:m[2]}}
+  }catch(e){}
+  return null;
+}
+function songEmbed(i){return i.k==='yt'?'https://www.youtube-nocookie.com/embed/'+i.id+'?autoplay=1&playsinline=1&rel=0':'https://open.spotify.com/embed/'+i.t+'/'+i.id}
+function songCard(r,sm){
+  const mine=r.author_id===me.id,inf=songInfo(r.youtube_url),c=h('div',{class:'sg'+(sm?' sm':'')}),media=h('div',{class:'sgm'});
+  const thumb=()=>{
+    media.replaceChildren();
+    const t=h('div',{class:'sgt'});
+    if(inf&&inf.k==='yt')t.style.backgroundImage='url(https://i.ytimg.com/vi/'+inf.id+'/hqdefault.jpg)';
+    else t.append(h('span',{class:'sgn'},'🎵'));
+    if(inf)t.append(h('button',{type:'button',class:'sgp','aria-label':'تشغيل',onclick:play},'▶'));
+    media.append(t);
+  };
+  const play=()=>{
+    const prev=SGC;SGC=[thumb];prev.forEach(f=>{try{f()}catch(e){}});
+    const f=h('iframe',{class:'sgf'+(inf.k==='sp'?' sp':''),src:songEmbed(inf),allow:'autoplay; encrypted-media; picture-in-picture',allowfullscreen:'',referrerpolicy:'strict-origin-when-cross-origin'});
+    if(inf.k==='sp')f.style.height=(inf.t==='track'||inf.t==='episode'?152:352)+'px';
+    media.replaceChildren(f);
+  };
+  const info=h('div',{class:'sgi'},h('div',{class:'st'},'🎵 اختارها '+(mine?'أنا':nm())+' · '+fmt(new Date(r.day+'T12:00:00'))));
+  if(r.message)info.append(h('div',{class:'sgmsg'},'💭 '+r.message));
+  const row=h('div',{class:'row'});
+  if(inf)row.append(h('a',{class:'sgl',href:songNorm(r.youtube_url),target:'_blank',rel:'noopener noreferrer'},'افتحها فـ '+(inf.k==='yt'?'YouTube':'Spotify')+' ↗'));
+  if(mine)row.append(h('button',{type:'button',class:'ghost mini',onclick:async()=>{if(!confirm('تمسح هاد الأغنية؟'))return;const x=await sb.from('songs').delete().eq('id',r.id);if(x.error)alert(x.error.message);else render()}},'🗑'));
+  info.append(row);
+  c.append(media,info);thumb();return c;
+}
+async function songPage(){
+  SGC=[];
+  const dd=dayDate(todayN()),day=iso(dd);
+  const box=h('div',{},h('h1',{},'أغنية النهار 🎵'),h('p',{class:'sub'},fmt(dd)));
+  const {data,error}=await sb.from('songs').select('*').eq('space_id',SPACE).order('day',{ascending:false}).limit(60);
+  if(error){box.append(h('div',{class:'card'},h('div',{class:'err'},'خاصك تدير SQL ديال الأغاني (1.3): '+error.message)));return box}
+  const rows=data||[],todays=rows.filter(r=>r.day===day).sort((a,b)=>(a.author_id===me.id?0:1)-(b.author_id===me.id?0:1));
+  todays.forEach(r=>box.append(songCard(r,false)));
+  if(!todays.some(r=>r.author_id===me.id)){
+    const ui=h('input',{type:'text',placeholder:'لصق رابط YouTube (ولا Spotify)',dir:'ltr'}),mi=h('textarea',{placeholder:'علاش اخترتها؟ (اختياري)',style:'min-height:70px',maxlength:'300'}),er=h('div',{class:'err'});
+    const b=h('button',{type:'button'},'زيد الأغنية 🎵');
+    b.onclick=async()=>{
+      er.textContent='';
+      const u=songNorm(ui.value);
+      if(!songInfo(u)){er.textContent='الرابط ماشي ديال YouTube ولا Spotify';return}
+      b.disabled=true;
+      const r=await sb.from('songs').insert({space_id:SPACE,day,youtube_url:u,message:mi.value.trim()||null});
+      b.disabled=false;
+      if(r.error){er.textContent=r.error.code==='23505'?'أغنيتك ديال اليوم تزادت من قبل':'ما تحفظاتش: '+r.error.message;return}
+      render();
+    };
+    box.append(h('div',{class:'card sun'},h('b',{class:'t'},'زيد أغنيتك ديال اليوم'),ui,h('div',{style:'height:8px'}),mi,h('div',{class:'row'},b),er));
+  }
+  const old=rows.filter(r=>r.day!==day);
+  if(old.length){box.append(h('h2',{style:'margin-top:22px'},'الأغاني اللي فاتو'));old.forEach(r=>box.append(songCard(r,true)))}
+  return box;
+}
+
+async function questionPage(){
+  const n=todayN(),day=iso(dayDate(n));
+  const {data,error}=await sb.from('question_answers').select('*').eq('space_id',SPACE).eq('day',day);
+  if(error)throw error;
+  const mine=(data||[]).find(r=>r.author_id===me.id),other=(data||[]).find(r=>r.author_id!==me.id);
+  const box=h('div',{},h('h1',{},'سؤال النهار ✨'),h('p',{class:'sub'},'النهار '+n));
+  box.append(h('div',{class:'card sun'},h('b',{},QS[(n-1)%QS.length])));
+  const ta=h('textarea',{placeholder:'جاوب هنا…'});ta.value=mine?mine.answer||'':'';
+  const st=h('span',{class:'st'},'');
+  const b=h('button',{},'حفظ الجواب 💾');
+  b.onclick=async()=>{
+    const {error}=await sb.from('question_answers').upsert({space_id:SPACE,day,author_id:me.id,answer:ta.value},{onConflict:'space_id,day,author_id'});
+    if(error)st.textContent='ما تحفظش: '+error.message;else render();
+  };
+  box.append(h('div',{class:'card'},h('b',{class:'t'},'أنا 💗'),ta,h('div',{class:'row'},b,st)));
+  let oc;
+  if(!other)oc='مزال ما جاوب… 🥺💗';
+  else if(!mine)oc='جاوب، خاصك تجاوب نتا حتى ترى جوابو 🔒';
+  else oc=other.answer||'…';
+  box.append(h('div',{class:'card sun'},h('b',{class:'t'},nm()+' 💌'),h('div',{style:'white-space:pre-wrap'},oc)));
+  return box;
+}
+
+let gsub='q',nsub='dream';
+const myWho=()=>((me.email||'').toLowerCase()==='adilouakrim26@gmail.com'?'adil':'her');
+let ghz='all';
+const HZ=[['all','الكل'],['life','🌍 الحياة'],['year','📅 السنة'],['month','🗓️ الشهر'],['day','☀️ اليوم']];
+async function notesPage(){
+  const box=h('div'),chips=h('div',{class:'row',style:'justify-content:center'});
+  const T={dream:'أحلام 🌠',goal:'أهداف 🎯',answer:'أجوبة 💬'};
+  Object.entries(T).forEach(([k,t])=>chips.append(h('button',{class:nsub===k?'':'ghost',onclick:()=>{nsub=k;render()}},t)));
+  box.append(h('h1',{},'أحلامنا وأهدافنا'),h('p',{class:'sub'},nsub==='answer'?'أجوبة دوينا عليها من قبل':nsub==='dream'?'الحلم كيبقى حلم، والأهداف كنخدمو عليها 💪':'الحوايج اللي غنخدمو عليها 🎯'),chips);
+  if(nsub==='goal'){const hz=h('div',{class:'row',style:'justify-content:center'});HZ.forEach(([k,t])=>hz.append(h('button',{class:ghz===k?'mini':'ghost mini',onclick:()=>{ghz=k;render()}},t)));box.append(hz)}
+  let {data,error}=await sb.from('our_notes').select('*').eq('space_id',SPACE).eq('kind',nsub).order('created_at',{ascending:true});
+  if(error)throw error;
+  if(nsub==='goal'&&ghz!=='all')data=data.filter(r=>r.horizon===ghz);
+  const label=w=>w===myWho()?'أنا '+(w==='adil'?'💙':'💗'):(nm()+' '+ic());
+  if(!data.length)box.append(h('div',{class:'card'},'مزال ما كاين والو هنا. زيد أول وحدة ✨'));
+  data.forEach(r=>{
+    const hzT=r.horizon?(HZ.find(x=>x[0]===r.horizon)||[0,''])[1]:'';
+    const c=h('div',{class:'card'},h('b',{class:'t'},label(r.who)+(hzT?'  ·  '+hzT:'')),h('div',{style:'white-space:pre-wrap'},r.content));
+    if(r.author_id===me.id)c.append(h('div',{class:'row'},h('button',{class:'ghost',onclick:async()=>{if(confirm('تمسح هادي؟')){await sb.from('our_notes').delete().eq('id',r.id);render()}}},'🗑')));
+    box.append(c);
+  });
+  const ta=h('textarea',{placeholder:'زيد وحدة جديدة…',style:'min-height:70px'});
+  const hs=h('select',{});HZ.filter(x=>x[0]!=='all').forEach(([k,t])=>{const o=h('option',{value:k},t);if(k===(ghz==='all'?'year':ghz))o.selected=true;hs.append(o)});
+  box.append(h('div',{class:'card sun'},ta,nsub==='goal'?h('div',{class:'row'},hs):'',h('div',{class:'row'},h('button',{onclick:async()=>{
+    const v=ta.value.trim();if(!v)return;
+    const row={space_id:SPACE,kind:nsub,who:myWho(),content:v};if(nsub==='goal')row.horizon=hs.value;
+    const {error}=await sb.from('our_notes').insert(row);
+    if(error)alert(error.message);else render();
+  }},'زيد 💾'))));
+  return box;
+}
+function importFile(){
+  const f=h('input',{type:'file',accept:'.json,application/json'});
+  f.onchange=async()=>{
+    try{
+      const j=JSON.parse(await f.files[0].text());
+      const sn=(j.snippets||[]).map(r=>({space_id:SPACE,day:r.day,line_no:r.line_no,content:r.content}));
+      const nt=(j.notes||[]).map(r=>({space_id:SPACE,kind:r.kind,who:r.who,content:r.content,import_key:r.import_key}));
+      let e1=null,e2=null;
+      if(sn.length)e1=(await sb.from('chat_snippets').upsert(sn,{onConflict:'space_id,day,line_no'})).error;
+      if(nt.length)e2=(await sb.from('our_notes').upsert(nt,{onConflict:'space_id,import_key'})).error;
+      const e=e1||e2;
+      alert(e?'وقع مشكل: '+e.message:'تم الاستيراد ✓  '+sn.length+' جملة و '+nt.length+' ملاحظة');
+      render();
+    }catch(e){alert('الملف ماشي صحيح: '+e.message)}
+  };
+  f.click();
+}
+
+async function loadMsgs(){
+  if(DECOY){const l=$('#ml');l.replaceChildren(...DM.map(m=>h('div',{class:'b me'},m)));l.scrollTop=l.scrollHeight;return}
+  const {data}=await sb.from('messages').select('*').eq('space_id',SPACE).order('created_at',{ascending:true}).limit(300);
+  markMsgsSeen(data);
+  const l=$('#ml'),stick=l.scrollTop+l.clientHeight>=l.scrollHeight-60;
+  l.replaceChildren(...(data||[]).map(m=>h('div',{class:'b '+(m.created_by===me.id?'me':'ot')},m.content)));
+  if(stick)l.scrollTop=l.scrollHeight;
+}
+function openMsgs(){history.pushState({k:'ov'},'');$('#ov').classList.add('on');loadMsgs().then(()=>{$('#ml').scrollTop=1e9});if(!DECOY)poll=setInterval(loadMsgs,5000)}
+function closeMsgs(fp){if(!fp&&history.state&&history.state.k==='ov'){history.back();return}$('#ov').classList.remove('on');clearInterval(poll)}
+async function sendMsg(){
+  const v=$('#mi').value.trim();if(!v)return;
+  if(DECOY){DM.push(v);$('#mi').value='';await loadMsgs();return}
+  const {error}=await sb.from('messages').insert({space_id:SPACE,created_by:me.id,content:v});
+  if(!error){$('#mi').value='';await loadMsgs();$('#ml').scrollTop=1e9}else alert('ما تصيفطاتش: '+error.message)
+}
+const sndUI=()=>{$('#snd').textContent=sndOn?'🔊':'🔇'};sndUI();
+$('#snd').onclick=()=>{sndOn=!sndOn;localStorage.setItem('ksnd',sndOn?'1':'0');sndUI();if(sndOn){ac();SND.key()}};
+/* ===== إشعارات Push ===== */
+const VAPID_PUB='BJRvWD5DPfZZKvSJKopRSlbawEFvJJgCdGOzrJzya3-GZxenMMC1ZSKcj0Wd41mJJV54S0GG_mVkTRGmJDbhCu0';
+const u8=s=>{const p='='.repeat((4-s.length%4)%4),r=atob((s+p).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from(r,c=>c.charCodeAt(0))};
+const pushOK=()=>'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window;
+async function saveSub(sub){
+  const j=sub.toJSON();
+  if(!j.endpoint||!j.keys)return {error:{message:'اشتراك ناقص'}};
+  return sb.from('push_subs').upsert({endpoint:j.endpoint,p256dh:j.keys.p256dh,auth:j.keys.auth},{onConflict:'endpoint'});
+}
+async function pushUI(){
+  const box=$('#pushBox');if(!box)return;
+  if(!pushOK()){box.hidden=true;return}
+  let sub=null;
+  try{const reg=await navigator.serviceWorker.getRegistration();sub=reg?await reg.pushManager.getSubscription():null}catch(e){}
+  if(sub&&Notification.permission==='granted'){const r=await saveSub(sub);if(!r.error){box.hidden=true;return}if(r.error.code==='42501'||/row-level/i.test(r.error.message||'')){try{await sub.unsubscribe()}catch(e){}sub=null}else{box.hidden=true;return}}
+  const msg=h('div',{class:'err'}),b=h('button',{type:'button'},'فعّل الإشعارات 🔔');
+  b.onclick=async()=>{
+    msg.textContent='';
+    try{
+      const perm=await Notification.requestPermission();
+      if(perm!=='granted'){msg.textContent='الإذن ما تعطاش. حلو إعدادات الموقع فـ Chrome وسمح بالإشعارات.';return}
+      b.disabled=true;
+      const reg=await navigator.serviceWorker.register('sw.js');
+      await navigator.serviceWorker.ready;
+      let s=await reg.pushManager.getSubscription();
+      if(!s)s=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(VAPID_PUB)});
+      const r=await saveSub(s);
+      if(r.error){msg.textContent='ما تحفظاتش: '+r.error.message;b.disabled=false;return}
+      box.hidden=true;
+    }catch(e){msg.textContent='وقع مشكل: '+(e.message||e);b.disabled=false}
+  };
+  box.replaceChildren(h('b',{class:'t'},'🔔 الإشعارات'),h('div',{class:'st'},'باش يوصلك إشعار ملي كتجي لحظة ولا رسالة جديدة'),h('div',{class:'row'},b),msg);
+  box.hidden=false;
+}
+function routeHash(){
+  if(DECOY){if(location.hash)history.replaceState(null,'',location.pathname+location.search);return false}
+  const x=(location.hash||'').replace('#','');
+  if(!x)return false;
+  history.replaceState(null,'',location.pathname+location.search);
+  if(TABS.some(t=>t[0]===x)){go(x,null,true);return true}
+  if(x==='msgs'){go('today',null,true);openMsgs();return true}
+  return false;
+}
+window.addEventListener('hashchange',()=>{if(me&&$('#pin').hidden)routeHash()});
+
+/* ===== نقطة حمراء على لحظة ⚡ ===== */
+const seenKey=()=>'kinstseen_'+(me?me.id:'');
+function markInstSeen(rows){
+  try{
+    let t=Date.now();
+    (rows||[]).forEach(r=>{const x=new Date(r.created_at).getTime();if(x>t)t=x});
+    localStorage.setItem(seenKey(),String(t));
+  }catch(e){}
+  const b=document.querySelector('#nav [data-t="inst"] .rd');if(b)b.remove();
+}
+async function checkInst(){
+  try{
+    if(!me||!sb||tab==='inst'||DECOY)return;
+    const btn=document.querySelector('#nav [data-t="inst"]');if(!btn)return;
+    const seen=+localStorage.getItem(seenKey())||0;
+    const {data,error}=await sb.from('photos').select('created_at').eq('space_id',SPACE).like('path','%/inst-%').neq('author_id',me.id).order('created_at',{ascending:false}).limit(1);
+    if(error)return;
+    const has=data&&data[0]&&new Date(data[0].created_at).getTime()>seen;
+    const old=btn.querySelector('.rd');
+    if(has&&!old&&tab!=='inst')btn.append(h('i',{class:'rd'}));
+    if(!has&&old)old.remove();
+  }catch(e){}
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&me&&$('#pin').hidden)checkAll()});
+
+/* ===== v4: تفاعل، مزاج، لحظة النهار، كنفكر فيك، بحال اليوم، مفضلة ===== */
+let picsFav=false;
+const nm=()=>myWho()==='adil'?'الحبيبة':'الكبيدة';
+const ic=()=>myWho()==='adil'?'💗':'💙';
+let LB=null;
+function closeLb(fp){if(!LB)return;if(!fp&&history.state&&history.state.k==='lb'){history.back();return}LB.remove();LB=null}
+function lightbox(u){if(!u||LB)return;const o=h('div',{class:'lb',onclick:()=>closeLb()},h('img',{src:u,alt:''}));LB=o;history.pushState({k:'lb'},'');document.body.append(o)}
+addEventListener('popstate',e=>{
+  if(!me||!$('#app').classList.contains('on')||!$('#pin').hidden)return;
+  if(LB){closeLb(true);return}
+  if($('#ov').classList.contains('on')){closeMsgs(true);return}
+  const s=e.state;
+  if(s&&s.k==='nav')go(s.tab,s.day,true);else go('today',null,true);
+});
+const APP_VER=document.querySelector('meta[name=app-ver]').content;
+async function checkUpdate(){
+  if($('#upd'))return;
+  try{
+    const r=await fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'});
+    const m=(await r.text()).match(/name="app-ver" content="([^"]+)"/);
+    if(m&&m[1]!==APP_VER)document.body.append(h('div',{id:'upd',class:'upd',onclick:()=>location.reload()},'✨ فيه نسخة جديدة من كتابنا، اضغط هنا للتحديث'));
+  }catch(e){}
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkUpdate()});
+setTimeout(checkUpdate,4000);setInterval(checkUpdate,300000);
+async function loadReacts(){
+  const m=new Map();
+  try{
+    const {data,error}=await sb.from('photo_reacts').select('*');
+    if(error)return m;
+    (data||[]).forEach(r=>{if(!m.has(r.photo_id))m.set(r.photo_id,[]);m.get(r.photo_id).push(r)});
+  }catch(e){}
+  return m;
+}
+async function saveReact(pid,heart,comment){
+  const r=await sb.from('photo_reacts').upsert({photo_id:pid,heart:!!heart,comment:comment||null,updated_at:new Date().toISOString()},{onConflict:'photo_id,author_id'});
+  return r.error;
+}
+function reactCtl(p,list){
+  const my=list.find(r=>r.author_id===me.id)||{};
+  const st={heart:!!my.heart,comment:my.comment||''};
+  const others=list.filter(r=>r.author_id!==me.id);
+  const oh=others.filter(r=>r.heart).length;
+  const b=h('button',{type:'button',class:'hb'});
+  const paint=()=>{const n=oh+(st.heart?1:0);b.textContent=(st.heart?'❤️':'🤍')+(n?' '+n:'');b.classList.toggle('on',st.heart)};
+  paint();
+  const save=()=>saveReact(p.id,st.heart,st.comment);
+  b.onclick=async ev=>{ev.stopPropagation();st.heart=!st.heart;paint();buzz(10);const er=await save();if(er){st.heart=!st.heart;paint();alert('ما تحفظاتش: '+er.message)}};
+  return {b,st,save,others};
+}
+const MOODS=['😍','🥰','😊','😐','😴','😢','😡','🤒'];
+async function moodCard(day){
+  try{
+    const {data,error}=await sb.from('day_moods').select('*').eq('space_id',SPACE).eq('day',day);
+    if(error)return null;
+    const mine=(data||[]).find(r=>r.author_id===me.id),other=(data||[]).find(r=>r.author_id!==me.id);
+    let cur=mine?mine.mood:null;
+    const row=h('div',{class:'moods'});
+    const paint=()=>row.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.getAttribute('data-m')===cur));
+    MOODS.forEach(m=>{
+      const b=h('button',{type:'button','data-m':m},m);
+      b.onclick=async()=>{
+        const old=cur;cur=m;paint();
+        const r=await sb.from('day_moods').upsert({space_id:SPACE,day,author_id:me.id,mood:m},{onConflict:'space_id,day,author_id'});
+        if(r.error){cur=old;paint();alert('ما تحفظاتش: '+r.error.message)}
+      };
+      row.append(b);
+    });
+    paint();
+    return h('div',{class:'card'},h('b',{class:'t'},'🎭 شنو مزاجك؟'),row,h('div',{class:'st',style:'margin-top:8px'},nm()+': '+(other?other.mood:'مزال ما ختار…')));
+  }catch(e){return null}
+}
+async function momentCard(){
+  try{
+    const t0=new Date();t0.setHours(0,0,0,0);
+    const {data,error}=await sb.from('photos').select('author_id,created_at').eq('space_id',SPACE).like('path','%/inst-%').gte('created_at',t0.toISOString());
+    if(error)return null;
+    const md=(data||[]).some(r=>r.author_id===me.id),od=(data||[]).some(r=>r.author_id!==me.id);
+    const c=h('div',{class:'card'+(md?'':' sun')},h('b',{class:'t'},'⚡ لحظة النهار'),h('div',{},'أنا: '+(md?'✅ صورت':'⏳ مزال')+'  ·  '+nm()+': '+(od?'✅ صور':'⏳ مزال')));
+    if(!md)c.append(h('div',{class:'row'},h('button',{type:'button',onclick:()=>go('inst')},'صوّر لحظة دابا ⚡')));
+    return c;
+  }catch(e){return null}
+}
+function thinkBtn(){
+  if(APPSET.think===false)return [];
+  const msg=h('span',{class:'st'});
+  const b=h('button',{type:'button'},'كنفكر فيك 💭');
+  b.onclick=async()=>{
+    let last=0;try{last=+localStorage.getItem('kthink')||0}catch(e){}
+    if(Date.now()-last<20000){msg.textContent='تسنى شوية 💗';return}
+    b.disabled=true;
+    const r=await sb.from('thinking_of_you').insert({space_id:SPACE});
+    b.disabled=false;
+    if(r.error){msg.textContent='ما تصيفطاتش: '+r.error.message;return}
+    try{localStorage.setItem('kthink',String(Date.now()))}catch(e){}
+    msg.textContent='وصل 💭';buzz(20);
+  };
+  return [b,msg];
+}
+async function onThisDay(){
+  try{
+    const now=dayDate(todayN()),dom=now.getDate(),list=[];
+    for(let k=1;k<=12;k++){
+      const d=new Date(now.getFullYear(),now.getMonth()-k,dom,12);
+      if(d.getDate()!==dom)continue;
+      if(d<START)break;
+      list.push(iso(d));
+    }
+    if(!list.length)return null;
+    const {data,error}=await sb.from('day_entries').select('day,author_id,content').eq('space_id',SPACE).in('day',list).order('day',{ascending:false});
+    if(error)return null;
+    const rows=(data||[]).filter(r=>r.content&&r.content.trim());
+    if(!rows.length)return null;
+    const box=h('div',{class:'card sun'},h('b',{class:'t'},'🕰️ بحال اليوم'));
+    rows.forEach(r=>{
+      const n=Math.round((new Date(r.day+'T12:00:00')-START)/864e5)+1,t=r.content.trim();
+      box.append(h('div',{style:'margin:6px 0;white-space:pre-wrap'},h('span',{class:'st'},'النهار '+n+' · '+(r.author_id===me.id?'أنا':nm())+': '),t.length>180?t.slice(0,180)+'…':t));
+    });
+    return box;
+  }catch(e){return null}
+}
+function helpCard(){
+  const T=['Chrome: ⋮ ← الإعدادات ← إعدادات الموقع ← الإشعارات، وتأكد بلي مسموح.','إعدادات الهاتف ← التطبيقات ← Chrome ← الإشعارات: خليها مفعلة.','إعدادات الهاتف ← التطبيقات ← Chrome ← توفير البطارية (ولا Battery saver): ختار «بلا قيود» (No restrictions).','إعدادات الهاتف ← التطبيقات ← الأذونات ← التشغيل التلقائي (Autostart): فعّل Chrome.','فالتطبيقات الأخيرة: ضغط بقوة على Chrome وختار القفل 🔒 باش ما يتقتلش.','الأحسن: Chrome ⋮ ← «إضافة إلى الشاشة الرئيسية» وخدم التطبيق من الأيقونة.','أسماء القوائم تختلف شوية حسب نسخة MIUI/HyperOS.'];
+  return h('details',{class:'card'},h('summary',{},'🔔 الإشعارات ما كتوصلش؟ (Redmi)'),h('ol',{},...T.map(t=>h('li',{},t))));
+}
+const mseenKey=()=>'kmsgseen_'+(me?me.id:'');
+function markMsgsSeen(rows){
+  try{let t=Date.now();(rows||[]).forEach(r=>{const x=new Date(r.created_at).getTime();if(x>t)t=x});localStorage.setItem(mseenKey(),String(t))}catch(e){}
+  const o=document.querySelector('#msgBtn .rd');if(o)o.remove();
+}
+async function checkMsgs(){
+  try{
+    if(!me||!sb||DECOY)return;
+    const btn=$('#msgBtn');if(!btn)return;
+    const open=$('#ov').classList.contains('on');
+    const seen=+localStorage.getItem(mseenKey())||0;
+    const {data,error}=await sb.from('messages').select('created_at').eq('space_id',SPACE).neq('created_by',me.id).order('created_at',{ascending:false}).limit(1);
+    if(error)return;
+    const has=!open&&data&&data[0]&&new Date(data[0].created_at).getTime()>seen;
+    const old=btn.querySelector('.rd');
+    if(has&&!old)btn.append(h('i',{class:'rd'}));
+    if(!has&&old)old.remove();
+  }catch(e){}
+}
+const checkAll=()=>{checkInst();checkMsgs();checkDev();missCheck()};
+$('#mi').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();sendMsg()}});
+
+/* ===== v5: صفحة الأدمن (عادل فقط) ===== */
+let isAdmin=false,APPSET={},lastOpen=0;
+async function loadMeta(){
+  let why='';
+  try{const r=await sb.from('user_roles').select('role').eq('user_id',me.id).maybeSingle();isAdmin=!!(r.data&&r.data.role==='admin');why=r.error?('خطأ: '+r.error.message):(r.data?r.data.role:'ما كاينش سطر')}catch(e){isAdmin=false;why='خطأ: '+(e.message||e)}
+  {const v=$('#ver');if(v){v.textContent='نسخة '+document.querySelector('meta[name=app-ver]').content+' · '+why;v.style.opacity=1;v.style.fontSize='13px'}}
+  try{const r=await sb.from('app_settings').select('*');APPSET={};(r.data||[]).forEach(x=>{APPSET[x.key]=x.value})}catch(e){}
+  try{if(typeof APPSET.decoy_pin==='string')localStorage.setItem('kdecoy',APPSET.decoy_pin)}catch(e){}
+  const b=$('#admBtn');if(b)b.hidden=!isAdmin||DECOY;
+}
+function logAct(k){if(DECOY)return;if(k==='open')lastOpen=Date.now();try{sb.from('activity_log').insert({kind:k}).then(()=>{},()=>{})}catch(e){}}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&me&&$('#pin').hidden&&Date.now()-lastOpen>600000)logAct('open')});
+const fmtB=b=>b>=1073741824?(b/1073741824).toFixed(2)+' Go':(b/1048576).toFixed(1)+' Mo';
+const fmtDT=x=>x?new Date(x).toLocaleString('ar-MA',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'}):'ما كاينش';
+async function setSet(k,v,er){
+  const r=await sb.from('app_settings').upsert({key:k,value:v,updated_at:new Date().toISOString()},{onConflict:'key'});
+  if(r.error){er.textContent='ما تحفظاتش: '+r.error.message;return}
+  APPSET[k]=v;er.textContent='تحفظات ✓';
+}
+async function adminBackup(msg){
+  msg.textContent='كنجمع المعطيات…';
+  const out={exported_at:new Date().toISOString(),note:'روابط الصور والأوديوهات فقط، ماشي الملفات'};
+  for(const t of ['day_entries','messages','photos','photo_comments','photo_reacts','question_answers','our_notes','day_moods','special_days','chat_snippets','countdowns','songs']){
+    try{let q=sb.from(t).select('*');if(t!=='photo_comments'&&t!=='photo_reacts')q=q.eq('space_id',SPACE);const r=await q;out[t]=r.error?('خطأ: '+r.error.message):r.data}catch(e){out[t]='خطأ'}
+  }
+  try{const r=await sb.from('secret_letters').select('*').eq('space_id',SPACE).eq('created_by',me.id);out.secret_letters_mine=r.error?null:r.data}catch(e){}
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(out,null,1)],{type:'application/json'}));
+  a.download='kitabna-backup-'+iso(new Date())+'.json';document.body.append(a);a.click();a.remove();msg.textContent='تحمّل الملف ✓';
+}
+async function adminPage(){
+  if(!isAdmin||DECOY)return h('div',{class:'card'},'ما مسموحش');
+  let dv=[],dverr=null;
+  try{const r=await sb.from('devices').select('*').order('last_seen',{ascending:false});dv=r.data||[];dverr=r.error}catch(e){dverr=e}
+  const box=h('div',{},h('h1',{},'⚙️ الإعدادات'),h('p',{class:'sub'},'خاصة بالأدمن'));
+  if(dv.some(r=>r.is_new&&!r.ack))box.append(h('div',{class:'card sun'},h('b',{class:'t'},'⚠️ جهاز جديد'),h('div',{},'تسجل جهاز جديد فواحد من الحسابين. شوف اللائحة تحت (📱 الأجهزة).')));
+  const sc=h('div',{class:'card'},h('b',{class:'t'},'💾 التخزين'));
+  const sr=await sb.rpc('admin_stats');
+  if(sr.error)sc.append(h('div',{class:'err'},'خاصك تدير SQL ديال الأدمن: '+sr.error.message));
+  else{
+    const s=sr.data,TOT=1073741824,pc=Math.min(100,s.bytes/TOT*100),col=pc<70?'#3bb273':pc<90?'#f0a020':'#e0334f';
+    sc.append(h('div',{class:'abar'},h('i',{style:'width:'+pc.toFixed(1)+'%;background:'+col})),
+      h('div',{class:'st'},'مستعمل: '+fmtB(s.bytes)+' من 1 Go ('+pc.toFixed(1)+'%) · باقي: '+fmtB(Math.max(0,TOT-s.bytes))+' ('+(100-pc).toFixed(1)+'%)'),
+      h('div',{style:'margin-top:8px'},'📸 صور: '+s.photos+' · 🎙️ أوديوهات: '+s.audios+' · 💬 رسائل: '+s.messages+' · 📖 كتابات: '+s.entries));
+  }
+  box.append(sc);
+  const days=[];for(let i=0;i<7;i++){const d=new Date();d.setDate(d.getDate()-i);days.push(iso(d))}
+  const oldest=days[6];
+  const [rl,lg,en,qa]=await Promise.all([
+    sb.from('user_roles').select('user_id,role'),
+    sb.from('activity_log').select('user_id,kind,created_at').order('created_at',{ascending:false}).limit(1000),
+    sb.from('day_entries').select('author_id,day,content,audio_path,photo_path').eq('space_id',SPACE).gte('day',oldest),
+    sb.from('question_answers').select('author_id,day').eq('space_id',SPACE).gte('day',oldest)]);
+  const oth=((rl.data||[]).find(r=>r.user_id!==me.id)||{}).user_id;
+  const person=(id,title)=>{
+    const L=(lg.data||[]).filter(x=>x.user_id===id),
+      E=(en.data||[]).filter(x=>x.author_id===id&&((x.content&&x.content.trim())||x.audio_path||x.photo_path)),
+      Q=(qa.data||[]).filter(x=>x.author_id===id),
+      lastK=k=>{const r=L.find(x=>x.kind===k);return r?r.created_at:null},
+      dl=new Set(L.map(x=>iso(new Date(x.created_at)))),td=days[0],yn=b=>b?'✅ نعم':'❌ لا';
+    const c=h('div',{class:'card'},h('b',{class:'t'},title),
+      h('div',{},'🔑 آخر دخول بكلمة السر: '+fmtDT(lastK('login'))),
+      h('div',{},'👀 آخر فتح للتطبيق: '+fmtDT(lastK('open')||lastK('login'))),
+      h('div',{},'❓ جاوب سؤال اليوم: '+yn(Q.some(x=>x.day===td))),
+      h('div',{},'📖 كتب فاليوم: '+yn(E.some(x=>x.day===td))));
+    const g=h('div',{class:'ag'},h('b',{},'التاريخ'),h('b',{},'🔑'),h('b',{},'📖'),h('b',{},'❓'));
+    days.forEach(d=>g.append(h('span',{},d.slice(5)),h('span',{},dl.has(d)?'✅':'—'),h('span',{},E.some(x=>x.day===d)?'✅':'—'),h('span',{},Q.some(x=>x.day===d)?'✅':'—')));
+    c.append(h('div',{class:'st',style:'margin-top:8px'},'آخر 7 أيام'),g);return c;
+  };
+  box.append(oth?person(oth,nm()+' '+ic()):h('div',{class:'card'},'خاصك تزيد الدور ديال الحساب الآخر فـ user_roles (شوف SQL)'));
+  box.append(person(me.id,'أنا (عادل) 💙'));
+  /* 📱 الأجهزة */
+  const dc=h('div',{class:'card'},h('b',{class:'t'},'📱 الأجهزة'));
+  if(dverr)dc.append(h('div',{class:'err'},'خاصك تدير SQL ديال الأجهزة: '+(dverr.message||dverr)));
+  else if(!dv.length)dc.append(h('div',{class:'st'},'ما كاين حتى جهاز مسجل بعد.'));
+  dv.forEach(r=>{
+    const mineD=r.user_id===me.id,nw=r.is_new&&!r.ack;
+    const row=h('div',{style:'border-top:1px solid var(--line);padding:8px 0'},
+      h('div',{},(nw?'🆕 ':'')+(mineD?'أنا (عادل)':nm()+' '+ic())+(r.device_id===devId()?' · هاد الجهاز':'')),
+      h('div',{class:'st'},(r.label||'—')),
+      h('div',{class:'st',style:'direction:ltr;text-align:right'},'ID: '+String(r.device_id).slice(0,8)),
+      h('div',{class:'st'},'أول دخول: '+fmtDT(r.first_seen)+' · آخر دخول: '+fmtDT(r.last_seen)));
+    if(nw)row.append(h('div',{class:'row'},h('button',{class:'ghost mini',onclick:async()=>{const x=await sb.from('devices').update({ack:true}).eq('id',r.id);if(x.error)alert(x.error.message);else{checkDev();render()}}},mineD?'هذا أنا ✓':'عرفتو ✓')));
+    dc.append(row);
+  });
+  box.append(dc);
+  const ser=h('div',{class:'err'});
+  const tg=(k,t)=>{const i=h('input',{type:'checkbox'});i.checked=APPSET[k]!==false;i.onchange=()=>setSet(k,i.checked,ser);return h('label',{class:'tg'},h('span',{},t),i)};
+  const tm=(k,t,def)=>{const i=h('input',{type:'time'});i.value=APPSET[k]||def;i.onchange=()=>{if(i.value)setSet(k,i.value,ser)};return h('label',{class:'tg'},h('span',{},t),i)};
+  const bm=h('div',{class:'st'});
+  box.append(h('div',{class:'card'},h('b',{class:'t'},'🛠️ إعدادات عامة'),
+    tg('daily_push','إشعار الرسالة اليومية'),tm('daily_time','وقت الرسالة اليومية','09:00'),
+    tm('question_time','وقت سؤال النهار','09:00'),tg('think','زر «كنفكر فيك»'),tg('compress','ضغط الصور الجديدة'),
+    h('div',{class:'st'},'ملاحظة: الوقت وإشعار الرسالة اليومية كيتسجلو، وغيخدمو ملي نزيدو السيرفر ديال الرسائل التلقائية.'),ser));
+  /* 🎭 الكود الكاذب */
+  const di=h('input',{type:'text',inputmode:'numeric',maxlength:'6',placeholder:'6 أرقام',dir:'ltr'}),der=h('div',{class:'err'});
+  box.append(h('div',{class:'card'},h('b',{class:'t'},'🎭 الكود الكاذب'),
+    h('div',{class:'st'},'الحالي: '+(typeof APPSET.decoy_pin==='string'?'مخصص (مخفي)':'الافتراضي 000000')+' · كيفتح تطبيق فارغ بلا داطا حقيقية. نفس الكود للهاتفين.'),
+    h('div',{style:'height:8px'}),di,
+    h('div',{class:'row'},h('button',{onclick:async()=>{
+      der.textContent='';
+      const v=di.value.trim();
+      if(!/^\d{6}$/.test(v)){der.textContent='خاصو يكون 6 أرقام';return}
+      const st=pinStored();
+      if(st&&sameBytes(await pinHash(v,unb64(st.s),st.i),unb64(st.h))){der.textContent='ما يمكنش يكون بحال الكود الحقيقي ديالك';return}
+      const salt=crypto.getRandomValues(new Uint8Array(16)),it=150000,hh=await pinHash(v,salt,it);
+      const val=b64(salt)+'.'+b64(hh)+'.'+it;
+      await setSet('decoy_pin',val,der);
+      if(der.textContent==='تحفظات ✓'){try{localStorage.setItem('kdecoy',val)}catch(e){}di.value=''}
+    }},'بدّل الكود الكاذب')),der));
+  box.append(h('div',{class:'card'},h('b',{class:'t'},'📦 نسخة احتياطية'),h('div',{class:'row'},h('button',{onclick:()=>adminBackup(bm)},'حمّل Backup ⬇️'),bm)));
+  return box;
+}
+
+$('#cnt').onclick=()=>{if(me&&!DECOY)go('report')};
+applyTheme();setInterval(applyTheme,300000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)applyTheme()});
+boot();
+</script>
+</body>
+</html>
